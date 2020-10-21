@@ -155,7 +155,7 @@ class PrintUtil(context: Context?) {
             val signatureMsg = if (printerReceiptData.isPinverified) {
                 "SIGNATURE NOT REQUIRED"
             } else {
-                "SIGN............."
+                "SIGN ..............................................."
             }
 
             val pinVerifyMsg = if (printerReceiptData.isPinverified) {
@@ -557,9 +557,21 @@ class PrintUtil(context: Context?) {
                 PrinterConfig.addText.Alignment.BundleName,
                 PrinterConfig.addText.Alignment.CENTER
             )
-            printer?.addText(format, pinVerifyMsg)
-            printer?.addText(format, signatureMsg)
-            printer?.addText(format, printerReceiptData.cardHolderName)
+            if (printerReceiptData.isPinverified) {
+                //  printer?.addText(format, pinVerifyMsg)
+                centerText(format, pinVerifyMsg)
+                centerText(format, signatureMsg)
+            } else {
+                printer?.feedLine(2)
+                alignLeftRightText(format, pinVerifyMsg, "", "")
+                alignLeftRightText(format, signatureMsg, "", "")
+                printer?.feedLine(2)
+                // printer?.addText(format, pinVerifyMsg)
+                //  printer?.addText(format, signatureMsg)
+            }
+
+            centerText(format, printerReceiptData.cardHolderName)
+            //  printer?.addText(format, printerReceiptData.cardHolderName)
 
 
             val ipt =
@@ -568,11 +580,12 @@ class PrintUtil(context: Context?) {
             if (chunks != null) {
                 for (st in chunks) {
                     logger("TNC", st, "e")
-                    printer?.addText(textInLineFormatBundle,st)
+                    //  printer?.addText(format,st)
+                    alignLeftRightText(format, st, "", "")
                 }
             }
 
-         //   printer?.addText(format, ipt?.volletIssuerDisclammer)
+            //   printer?.addText(format, ipt?.volletIssuerDisclammer)
             printer?.addText(format, copyType.pName)
             printer?.addText(format, footerText[0])
             printer?.addText(format, footerText[1])
@@ -971,8 +984,6 @@ class PrintUtil(context: Context?) {
                     PrinterConfig.addTextInLine.mode.Devide_flexible
                 )
             }
-
-
             //  val totalAmount = "%.2f".format(printerReceiptData.totalAmmount.toFloat() / 100)
             var tipAndTransAmount = 0f
             /*   if(!printerReceiptData.tipAmmount.isBlank()){
@@ -1020,16 +1031,13 @@ class PrintUtil(context: Context?) {
             if (chunks != null) {
                 for (st in chunks) {
                     logger("TNC", st, "e")
-                    printer?.addText(textInLineFormatBundle,st)
+                    printer?.addText(format, st)
                 }
             }
 
-         //   printer?.addText(format, ipt?.volletIssuerDisclammer)
+            //   printer?.addText(format, ipt?.volletIssuerDisclammer)
             printer?.addText(format, footerText[0])
             printer?.addText(format, footerText[1])
-
-
-
 
             printLogo("BH.bmp")
 
@@ -2015,10 +2023,10 @@ class PrintUtil(context: Context?) {
             if (chunks != null) {
                 for (st in chunks) {
                     logger("TNC", st, "e")
-                    printer?.addText(textInLineFormatBundle,st)
+                    printer?.addText(format, st)
                 }
             }
-         //   printer?.addText(format, ipt?.volletIssuerDisclammer)
+            //   printer?.addText(format, ipt?.volletIssuerDisclammer)
             printer?.addText(format, copyType.pName)
             printer?.addText(format, footerText[0])
             printer?.addText(format, footerText[1])
@@ -2507,10 +2515,10 @@ class PrintUtil(context: Context?) {
             if (chunks != null) {
                 for (st in chunks) {
                     logger("TNC", st, "e")
-                    printer?.addText(textInLineFormatBundle,st)
+                    printer?.addText(textInLineFormatBundle, st)
                 }
             }
-        //    printer?.addText(textInLineFormatBundle, ipt?.volletIssuerDisclammer)
+            //    printer?.addText(textInLineFormatBundle, ipt?.volletIssuerDisclammer)
             printer?.feedLine(2)
             centerText(textInLineFormatBundle, copyType.pName)
             printer?.addText(textInLineFormatBundle, footerText[0])
