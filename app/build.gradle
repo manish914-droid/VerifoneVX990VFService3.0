@@ -36,7 +36,7 @@ android {
         targetSdkVersion 29
         versionCode 1
         buildConfigField "long", "TIMESTAMP", System.currentTimeMillis() + "L"
-        buildConfigField "long", "REVISION_ID", "201020"
+        buildConfigField "long", "REVISION_ID", "201021"
         versionName "01.01.10"
         multiDexEnabled true
 

@@ -441,8 +441,8 @@ class VFEmvHandler(var activity: Activity,var handler: Handler, var iemv: IEMV?,
             }
             DetectError.NeedContact.errorCode == result -> {
                 (activity as VFTransactionActivity).handleEMVFallbackFromError(
-                    activity.getString(R.string.alert),
-                    activity.getString(R.string.please_use_another_card_for_transaction),
+                    activity.getString(R.string.card_read_error),
+                    activity.getString(R.string.reinitiate_trans),
                     false
                 ) { alertCBBool ->
                     if (alertCBBool)
@@ -469,7 +469,7 @@ class VFEmvHandler(var activity: Activity,var handler: Handler, var iemv: IEMV?,
             }
             DetectError.DynamicLimit.errorCode == result -> {
                 (activity as VFTransactionActivity).handleEMVFallbackFromError(
-                    activity.getString(R.string.alert),
+                    activity.getString(R.string.card_read_error),
                     activity.getString(R.string.dynamicLimit_error),
                     false
                 ) { alertCBBool ->

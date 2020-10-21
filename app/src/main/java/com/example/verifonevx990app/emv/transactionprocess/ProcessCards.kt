@@ -236,8 +236,8 @@ class ProcessCard(var activity: Activity, var handler: Handler, var cardProcesse
                                 }
                             } else {
                                 (activity as VFTransactionActivity).handleEMVFallbackFromError(
-                                    activity.getString(R.string.expired),
-                                    activity.getString(R.string.please_use_another_card_for_transaction),
+                                    activity.getString(R.string.card_read_error),
+                                    activity.getString(R.string.reinitiate_trans),
                                     false
                                 ) { alertCBBool ->
                                     if (alertCBBool)
@@ -454,13 +454,7 @@ class ProcessCard(var activity: Activity, var handler: Handler, var cardProcesse
                         VFService.vfBeeper?.startBeep(200)
                         println("Transactionamount is calling"+transactionalAmount.toString()+"Handler is"+handler)
                         if (transactionalAmount != null) {
-                            DoEmv(
-                                activity,
-                                handler,
-                                cardProcessedDataModal,
-                                ConstIPBOC.startEMV.intent.VALUE_cardType_contactless,
-                                transactionalAmount
-                            ) { cardProcessedDataModal ->
+                            DoEmv(activity, handler, cardProcessedDataModal, ConstIPBOC.startEMV.intent.VALUE_cardType_contactless, transactionalAmount) { cardProcessedDataModal ->
                                 transactionCallback(cardProcessedDataModal)
                             }
                         }

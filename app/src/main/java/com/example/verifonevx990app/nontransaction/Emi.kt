@@ -25,6 +25,7 @@ import com.example.verifonevx990app.R
 import com.example.verifonevx990app.emv.transactionprocess.CardProcessedDataModal
 import com.example.verifonevx990app.emv.transactionprocess.SyncEmiEnquiryTransactionToHost
 import com.example.verifonevx990app.emv.transactionprocess.SyncReversalToHost
+import com.example.verifonevx990app.main.MainActivity
 import com.example.verifonevx990app.realmtables.*
 import com.example.verifonevx990app.transactions.*
 import com.example.verifonevx990app.utils.printerUtils.PrintUtil
@@ -452,74 +453,122 @@ class EmiActivity : BaseActivity(), IBenefitTable, View.OnClickListener {
 
 
     private fun openBankList() {
+        val emiSchemeGroupTable: List<EmiSchemeGroupTable> by lazy { EmiSchemeGroupTable.selectFromEmiSchemeGroupProductTable() }
+        val emiSchemeTableSet = mutableSetOf<String>()
 
-        Dialog(this).apply {
-            requestWindowFeature(Window.FEATURE_NO_TITLE)
-            setContentView(R.layout.dialog_bank_list)
-            setCancelable(false)
-
-            val banlRl = findViewById<RecyclerView>(R.id.item_bank_rl)
-
-            val currentSet = mutableSetOf<String>()
-
-            for (e in pagerAdapter.list) {
-                currentSet.add(e.ipt.issuerId)
-            }
-
-            val filterList = mutableListOf<Array<String>>()
-           filterList.add(arrayOf("0", "All", "1"))
-            for (e in mListFragment) {
-                val item = Array(3) { "" }
-                item[0] = e.ipt.issuerId
-                item[1] = e.ipt.issuerName
-                item[2] = if (e.ipt.issuerId in currentSet) "1" else {
-                    filterList[0][2] = "0"
-                    "0"
-                }
-                filterList.add(item)
-            }
-
-            findViewById<View>(R.id.dbl_cancel_btn).setOnClickListener { dismiss() }
-
-          //  banlRl.layoutManager = GridLayoutManager(this.context, 2)
-            banlRl.layoutManager = LinearLayoutManager(this.context)
-            val filterAdapter = EmiFilterAdapter(filterList)
-            banlRl.adapter = filterAdapter
-
-
-            fun filterAdapter(filterResult: (List<EmiDetailFragment>, List<String>) -> Unit) {
-                val selSet = mutableSetOf<String>()
-                val re = filterAdapter.list
-                for (i in 1..re.lastIndex) {
-                    if (re[i][2] == "1") {
-                        selSet.add(re[i][0])
-                    }
-                }
-                // resetting pagerAdapter
-                val tl = mutableListOf<String>()
-                val fl = mListFragment.filter {
-                    if (it.ipt.issuerId in selSet) {
-                        tl.add(it.ipt.issuerName)
-                        true
-                    } else false
-                }
-                filterResult(fl, tl)
-            }
-
-            findViewById<View>(R.id.dbl_ok_btn).setOnClickListener {
-                filterAdapter { fl, tl ->
-                    if (tl.isEmpty()) {
-                        showToast("Select at least one bank.")
-                    } else {
-                        dismiss()
-                        pagerAdapter.list = fl
-                        pagerAdapter.title = tl
-                        pagerAdapter.notifyDataSetChanged()
+        var int: Int= 0
+        var emischemeid = ArrayList<String>()
+        for (e in emiSchemeGroupTable) {
+            if(e.isActive == "1" && e.emischemeIds.contains(","))
+                emischemeid = e.emischemeIds.split(",") as ArrayList<String>
+            else if(e.isActive =="1"){
+                for (j in emiSchemeTable) {  //114 for EmiSchemeTable
+                    val currDt =  getCurrentDate()
+                    if(currDt.compareTo(j.startDate) >= 0 && currDt.compareTo(j.endDate) <= 0  && mAmount <= j.maxValue.toDouble() / 100 && mAmount >= j.minValue.toDouble() / 100) {
+                        if (j.isActive == "1" && e.isActive == "1" && j.emiSchemeId == e.emischemeIds) {
+                            emiSchemeTableSet.add(j.schemeId)
+                        }
                     }
                 }
             }
+        }
+        for (e in emischemeid.iterator()) {
+            for (j in emiSchemeTable) {
+                val currDt =  getCurrentDate()
+                if(currDt.compareTo(j.startDate) >= 0 && currDt.compareTo(j.endDate) <= 0 && mAmount <= j.maxValue.toDouble() / 100 && mAmount >= j.minValue.toDouble() / 100) {
+                    if (j.isActive == "1" && j.emiSchemeId == emischemeid.get(int)) {
+                        emiSchemeTableSet.add(j.schemeId)
+                    }
+                }
+            }
+            int++
 
-        }.show()
+        }
+
+        if(emiSchemeTableSet.size > 0) {
+            Dialog(this).apply {
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+                setContentView(R.layout.dialog_bank_list)
+                setCancelable(false)
+
+                val banlRl = findViewById<RecyclerView>(R.id.item_bank_rl)
+
+                val currentSet = mutableSetOf<String>()
+
+                for (e in pagerAdapter.list) {
+                    currentSet.add(e.ipt.issuerId)
+                }
+
+                val filterList = mutableListOf<Array<String>>()
+                filterList.add(arrayOf("0", "All", "1"))
+                for (e in mListFragment) {
+                    val item = Array(3) { "" }
+                    item[0] = e.ipt.issuerId
+                    item[1] = e.ipt.issuerName
+                    item[2] = if (e.ipt.issuerId in currentSet) "1" else {
+                        filterList[0][2] = "0"
+                        "0"
+                    }
+                    filterList.add(item)
+                }
+
+                findViewById<View>(R.id.dbl_cancel_btn).setOnClickListener { dismiss() }
+
+                //  banlRl.layoutManager = GridLayoutManager(this.context, 2)
+                banlRl.layoutManager = LinearLayoutManager(this.context)
+                val filterAdapter = EmiFilterAdapter(filterList)
+                banlRl.adapter = filterAdapter
+
+
+                fun filterAdapter(filterResult: (List<EmiDetailFragment>, List<String>) -> Unit) {
+                    val selSet = mutableSetOf<String>()
+                    val re = filterAdapter.list
+                    for (i in 1..re.lastIndex) {
+                        if (re[i][2] == "1") {
+                            selSet.add(re[i][0])
+                        }
+                    }
+                    // resetting pagerAdapter
+                    val tl = mutableListOf<String>()
+                    val fl = mListFragment.filter {
+                        if (it.ipt.issuerId in selSet) {
+                            tl.add(it.ipt.issuerName)
+                            true
+                        } else false
+                    }
+                    filterResult(fl, tl)
+                }
+
+                findViewById<View>(R.id.dbl_ok_btn).setOnClickListener {
+                    filterAdapter { fl, tl ->
+                        if (tl.isEmpty()) {
+                            showToast("Select at least one bank.")
+                        } else {
+                            dismiss()
+                            pagerAdapter.list = fl
+                            pagerAdapter.title = tl
+                            pagerAdapter.notifyDataSetChanged()
+                        }
+                    }
+                }
+
+            }.show()
+        }
+        else{
+            alertBoxWithAction(null, null,
+                getString(R.string.emis),
+                getString(R.string.no_emi),
+                false,
+                getString(R.string.positive_button_ok),
+                { alertPositiveCallback ->
+                    if (alertPositiveCallback) {
+                        startActivity(Intent(this, MainActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        })
+                    }
+                },
+                {})
+        }
 
       //  logic for single and multiple bank
   /*      val currentSet = mutableSetOf<String>()

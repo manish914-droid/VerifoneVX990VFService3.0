@@ -113,6 +113,7 @@
     <string name="network">Network Error!!!</string>
     <string name="sms_sent">SMS has been sent.</string>
     <string name="emi_check">Please click on proceed button</string>
+    <string name="no_emi">No EMI available</string>
     <string name="pending_preauthdetails">Could not get connect to host.</string>
     <string name="transaction_delined_msg">Transaction Declined</string>
     <string name="transaction_failed_msg">Transaction Failed</string>
@@ -242,6 +243,7 @@
     <string name="emi_sale_hint">This transaction is eligible for Insta EMI.\nPlease select the option.</string>
     <string name="sale">Normal Sale</string>
     <string name="emi">Insta EMI</string>
+    <string name="emis">EMI</string>
     <string name="void_pre_auth">Void Pre-Auth</string>
     <string name="pre_auth_data_syn">Pre Auth Data Sync</string>
     <string name="refund_data_sync">Refund Data Sync</string>
@@ -262,6 +264,8 @@
     <string name="settlement_successfully_done">Settlement Successfully Done</string>
     <string name="reversal">Reversal</string>
     <string name="card_error">Card Error</string>
+    <string name="card_read_error">Card Read Error</string>
+    <string name="reinitiate_trans">Please reinitiate the transaction.</string>
     <string name="error_hint">Error</string>
     <string name="print_customer_copy">Print Customer Copy</string>
     <string name="print_merchant_copy">Print Merchant Copy</string>
