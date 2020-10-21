@@ -1,6 +1,7 @@
 package com.example.verifonevx990app.offlinemanualsale
 
 import android.content.Context
+import android.text.TextUtils
 import android.util.Log
 import com.example.verifonevx990app.realmtables.BatchFileDataTable
 import com.example.verifonevx990app.vxUtils.*
@@ -28,7 +29,8 @@ class SyncOfflineSaleToHost(
                         val isoByteArray = isoData.generateIsoByteRequest()
                    //     withContext(Dispatchers.IO) {
                         sendOfflineSaleToHost(isoByteArray) { offlineSuccess, serverValidationMsg ->
-                            validationMsg = serverValidationMsg
+                            if (!TextUtils.isEmpty(serverValidationMsg))
+                                validationMsg = serverValidationMsg
                             if (offlineSuccess) {
                                 BatchFileDataTable.updateOfflineSaleStatus(batchData[i].invoiceNumber)
                                 VFService.showToast("Offline Sale of Invoice: ${batchData[i].invoiceNumber} Uploaded Successfully")
@@ -59,7 +61,8 @@ class SyncOfflineSaleToHost(
                             CreateOfflineSalePacket(batchData[i]).createOfflineSalePacket()
                         val isoByteArray = isoData.generateIsoByteRequest()
                         sendOfflineSaleToHost(isoByteArray) { offlineSuccess, serverValidationMsg ->
-                            validationMsg = serverValidationMsg
+                            if (!TextUtils.isEmpty(serverValidationMsg))
+                                validationMsg = serverValidationMsg
                             if (offlineSuccess) {
                                 BatchFileDataTable.updateOfflineSaleStatus(batchData[i].invoiceNumber)
                                 VFService.showToast("Offline Sale of Invoice: ${batchData[i].invoiceNumber} Uploaded Successfully")

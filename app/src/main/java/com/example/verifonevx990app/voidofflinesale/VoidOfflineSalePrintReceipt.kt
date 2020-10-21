@@ -75,21 +75,40 @@ class VoidOfflineSalePrintReceipt {
         centerText(format, headers[2])
     }
 
-    private fun centerText(format: Bundle, text: String) {
+    private fun centerText(format: Bundle, text: String, bold: Boolean = false) {
+        if (!bold) {
+            format.putInt(
+                PrinterConfig.addText.FontSize.BundleName,
+                PrinterConfig.addText.FontSize.NORMAL_24_24
+            )
+            format.putInt(
+                PrinterConfig.addText.Alignment.BundleName,
+                PrinterConfig.addText.Alignment.CENTER
+            )
+            printer?.addText(format, text)
 
-        format.putInt(
-            PrinterConfig.addText.FontSize.BundleName,
-            PrinterConfig.addText.FontSize.NORMAL_24_24
-        )
-        format.putInt(
-            PrinterConfig.addText.Alignment.BundleName,
-            PrinterConfig.addText.Alignment.CENTER
-        )
-        printer?.addText(format, text)
+        } else {
+            format.putInt(
+                PrinterConfig.addText.FontSize.BundleName,
+                PrinterConfig.addText.FontSize.NORMAL_DH_24_48_IN_BOLD
+            )
+            format.putInt(
+                PrinterConfig.addText.Alignment.BundleName,
+                PrinterConfig.addText.Alignment.CENTER
+            )
+            printer?.addText(format, text)
+        }
+
     }
 
     //Below method is used to print Offline Sale Receipt:-
-    fun voidOfflineSalePrint(context: Context?, batch: BatchFileDataTable, transactionType: Int,copyType: EPrintCopyType, printerCB: (Boolean,Boolean) -> Unit) {
+    fun voidOfflineSalePrint(
+        context: Context?,
+        batch: BatchFileDataTable,
+        transactionType: Int,
+        copyType: EPrintCopyType,
+        printerCB: (Boolean, Boolean) -> Unit
+    ) {
         val format = Bundle()
         val fmtAddTextInLine = Bundle()
         val tpt = TerminalParameterTable.selectFromSchemeTable()
@@ -170,26 +189,6 @@ class VoidOfflineSalePrintReceipt {
 
         printer?.addText(format, "--------------------------------")
 
-        //Sign Body Code:-
-        val signatureMsg = "SIGN.........................."
-        printer?.addText(format, signatureMsg)
-
-        //Agreement Body Code:-
-        val ipt =
-            IssuerParameterTable.selectFromIssuerParameterTable(AppPreference.WALLET_ISSUER_ID)
-        val chunks: List<String>? = ipt?.volletIssuerDisclammer?.let { chunkTnC(it) }
-        if (chunks != null) {
-            for (st in chunks) {
-                logger("TNC", st, "e")
-                printer?.addText(format,st)
-            }
-        }
-     //   printer?.addText(format, ipt?.volletIssuerDisclammer)
-        centerText(format, copyType.pName)
-        printer?.addText(format, footerText[0])
-        printer?.addText(format, footerText[1])
-
-        printLogo("BH.bmp")
 
         format.putInt(
             PrinterConfig.addText.FontSize.BundleName,
@@ -199,9 +198,32 @@ class VoidOfflineSalePrintReceipt {
             PrinterConfig.addText.Alignment.BundleName,
             PrinterConfig.addText.Alignment.CENTER
         )
-        printer?.addText(format, "App Version : ${BuildConfig.VERSION_NAME}")
+        val signatureMsg = "SIGN ..............................................."
+        // printer?.addText(format, signatureMsg)
+        printer?.feedLine(2)
+        alignLeftRightText(format, signatureMsg, "", "")
+        printer?.feedLine(2)
+        //Agreement Body Code:-
+        val ipt =
+            IssuerParameterTable.selectFromIssuerParameterTable(AppPreference.WALLET_ISSUER_ID)
+        val chunks: List<String>? = ipt?.volletIssuerDisclammer?.let { chunkTnC(it) }
+        if (chunks != null) {
+            for (st in chunks) {
+                logger("TNC", st, "e")
+                alignLeftRightText(format, st, "", "")
+            }
+        }
+        //   printer?.addText(format, ipt?.volletIssuerDisclammer)
+        centerText(fmtAddTextInLine, copyType.pName)
+        printer?.addText(fmtAddTextInLine, footerText[0])
+        printer?.addText(fmtAddTextInLine, footerText[1])
 
-        printer?.addText(format, "---------X-----------X----------")
+        printLogo("BH.bmp")
+
+
+        printer?.addText(fmtAddTextInLine, "App Version : ${BuildConfig.VERSION_NAME}")
+
+        printer?.addText(fmtAddTextInLine, "---------X-----------X----------")
         printer?.feedLine(4)
 
         // start print here and callback of printer:-
@@ -211,7 +233,10 @@ class VoidOfflineSalePrintReceipt {
                 when (copyType) {
                     EPrintCopyType.MERCHANT -> {
                         GlobalScope.launch(Dispatchers.Main) {
-                            (context as BaseActivity).showMerchantAlertBox2(PrintUtil(context), BatchFileDataTable()) { dialogCB ->
+                            (context as BaseActivity).showMerchantAlertBox2(
+                                PrintUtil(context),
+                                BatchFileDataTable()
+                            ) { dialogCB ->
                                 if (dialogCB) {
                                     Log.e("VOID OFF Sale RECEIPT", "SUCCESS.....")
                                     printerCB(true,true)

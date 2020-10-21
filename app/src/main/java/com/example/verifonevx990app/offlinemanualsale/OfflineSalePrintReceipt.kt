@@ -166,9 +166,10 @@ class OfflineSalePrintReceipt {
         printer?.addText(format, "--------------------------------")
 
         //Sign Body Code:-
-        val signatureMsg = "SIGN.........................."
-        printer?.addText(format, signatureMsg)
-
+        val signatureMsg = "SIGN ..............................................."
+        printer?.feedLine(2)
+        alignLeftRightText(format, signatureMsg, "", "")
+        printer?.feedLine(2)
         //Agreement Body Code:-
         val ipt =
             IssuerParameterTable.selectFromIssuerParameterTable(AppPreference.WALLET_ISSUER_ID)
@@ -176,14 +177,14 @@ class OfflineSalePrintReceipt {
         if (chunks != null) {
             for (st in chunks) {
                 logger("TNC", st, "e")
-                printer?.addText(format,st)
+                alignLeftRightText(format, st, "", "")
             }
         }
 
-      //  printer?.addText(format, ipt?.volletIssuerDisclammer)
-        centerText(format, copyType.pName)
-        printer?.addText(format, footerText[0])
-        printer?.addText(format, footerText[1])
+        //  printer?.addText(format, ipt?.volletIssuerDisclammer)
+        centerText(fmtAddTextInLine, copyType.pName)
+        printer?.addText(fmtAddTextInLine, footerText[0])
+        printer?.addText(fmtAddTextInLine, footerText[1])
 
         printLogo("BH.bmp")
 

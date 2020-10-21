@@ -651,7 +651,7 @@ class PrintUtil(context: Context?) {
         val signatureMsg = if (printerReceiptData.isPinverified) {
             "SIGNATURE NOT REQUIRED"
         } else {
-            "SIGN............."
+            "SIGN ..............................................."
         }
         val pinVerifyMsg = if (printerReceiptData.isPinverified) {
             "PIN VERIFIED OK"
@@ -1750,7 +1750,7 @@ class PrintUtil(context: Context?) {
         context: Context?,
         printerCallback: (Boolean) -> Unit
     ) {
-        val signatureMsg = "SIGN............."
+        val signatureMsg = "SIGN ..............................................."
 
         try {
             // bundle format for addText
@@ -2013,9 +2013,9 @@ class PrintUtil(context: Context?) {
                 PrinterConfig.addText.Alignment.BundleName,
                 PrinterConfig.addText.Alignment.CENTER
             )
-            printer?.addText(format, signatureMsg)
-
-
+            printer?.feedLine(2)
+            alignLeftRightText(format, signatureMsg, "", "")
+            printer?.feedLine(2)
             val ipt =
                 IssuerParameterTable.selectFromIssuerParameterTable(AppPreference.WALLET_ISSUER_ID)
 
@@ -2023,7 +2023,7 @@ class PrintUtil(context: Context?) {
             if (chunks != null) {
                 for (st in chunks) {
                     logger("TNC", st, "e")
-                    printer?.addText(format, st)
+                    alignLeftRightText(format, st, "", "")
                 }
             }
             //   printer?.addText(format, ipt?.volletIssuerDisclammer)
@@ -2503,19 +2503,31 @@ class PrintUtil(context: Context?) {
 
             centerText(textFormatBundle, "BASE AMOUNT  :     Rs  $txnAmount", true)
             printer?.feedLine(2)
-            centerText(textInLineFormatBundle, pinVerifyMsg.toString())
-            centerText(textInLineFormatBundle, signatureMsg.toString())
+            if (printerReceiptData.isPinverified) {
+                //  printer?.addText(format, pinVerifyMsg)
+                pinVerifyMsg?.let { centerText(textInLineFormatBundle, it) }
+                signatureMsg?.let { centerText(textInLineFormatBundle, it) }
+            } else {
+                printer?.feedLine(2)
+                pinVerifyMsg?.let { alignLeftRightText(textInLineFormatBundle, it, "", "") }
+                signatureMsg?.let { alignLeftRightText(textInLineFormatBundle, it, "", "") }
+                printer?.feedLine(2)
+                // printer?.addText(format, pinVerifyMsg)
+                //  printer?.addText(format, signatureMsg)
+            }
+
             centerText(textInLineFormatBundle, printerReceiptData.cardHolderName)
+            //  printer?.addText(format, printerReceiptData.cardHolderName)
 
 
             val ipt =
                 IssuerParameterTable.selectFromIssuerParameterTable(AppPreference.WALLET_ISSUER_ID)
-
             val chunks: List<String>? = ipt?.volletIssuerDisclammer?.let { chunkTnC(it) }
             if (chunks != null) {
                 for (st in chunks) {
                     logger("TNC", st, "e")
-                    printer?.addText(textInLineFormatBundle, st)
+                    //  printer?.addText(format,st)
+                    alignLeftRightText(textInLineFormatBundle, st, "", "")
                 }
             }
             //    printer?.addText(textInLineFormatBundle, ipt?.volletIssuerDisclammer)
@@ -2816,7 +2828,7 @@ class PrintUtil(context: Context?) {
         signatureMsg = if (printerReceiptData.isPinverified) {
             "SIGNATURE NOT REQUIRED"
         } else {
-            "SIGN............."
+            "SIGN ..............................................."
         }
         pinVerifyMsg = if (printerReceiptData.isPinverified) {
             "PIN VERIFIED OK"

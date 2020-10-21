@@ -45,7 +45,7 @@ class VoidRefundSalePrintReceipt {
         val signatureMsg = if (printerReceiptData.isPinverified) {
             "SIGNATURE NOT REQUIRED"
         } else {
-            "SIGN............."
+            "SIGN ..............................................."
         }
 
         val pinVerifyMsg = if (printerReceiptData.isPinverified) {
@@ -389,9 +389,21 @@ class VoidRefundSalePrintReceipt {
                 PrinterConfig.addText.Alignment.BundleName,
                 PrinterConfig.addText.Alignment.CENTER
             )
-            printer?.addText(format, pinVerifyMsg)
-            printer?.addText(format, signatureMsg)
-            printer?.addText(format, printerReceiptData.cardHolderName)
+            if (printerReceiptData.isPinverified) {
+                //  printer?.addText(format, pinVerifyMsg)
+                centerText(format, pinVerifyMsg)
+                centerText(format, signatureMsg)
+            } else {
+                printer?.feedLine(2)
+                alignLeftRightText(format, pinVerifyMsg, "", "")
+                alignLeftRightText(format, signatureMsg, "", "")
+                printer?.feedLine(2)
+                // printer?.addText(format, pinVerifyMsg)
+                //  printer?.addText(format, signatureMsg)
+            }
+
+            centerText(format, printerReceiptData.cardHolderName)
+            //  printer?.addText(format, printerReceiptData.cardHolderName)
 
 
             val ipt =
@@ -400,7 +412,8 @@ class VoidRefundSalePrintReceipt {
             if (chunks != null) {
                 for (st in chunks) {
                     logger("TNC", st, "e")
-                    printer?.addText(format,st)
+                    //  printer?.addText(format,st)
+                    alignLeftRightText(format, st, "", "")
                 }
             }
          //   printer?.addText(format, ipt?.volletIssuerDisclammer)
@@ -546,6 +559,7 @@ class VoidRefundSalePrintReceipt {
         }
 
     }
+
     private fun getNameByTransactionType(transactionType: Int): String {
         var tTyp = ""
         for (e in TransactionType.values()) {
@@ -555,5 +569,41 @@ class VoidRefundSalePrintReceipt {
             }
         }
         return tTyp
+    }
+
+    private fun alignLeftRightText(
+        fmtAddTextInLine: Bundle,
+        leftText: String,
+        rightText: String,
+        middleText: String = ""
+    ) {
+        try {
+            val mode = if (middleText == "") {
+                1
+            } else {
+                0
+            }
+
+            fmtAddTextInLine.putInt(
+                PrinterConfig.addTextInLine.FontSize.BundleName,
+                PrinterConfig.addTextInLine.FontSize.NORMAL_24_24
+            )
+            fmtAddTextInLine.putString(
+                PrinterConfig.addTextInLine.GlobalFont.BundleName,
+                PrinterFonts.path + PrinterFonts.FONT_AGENCYR
+            )
+
+            printer?.addTextInLine(
+                fmtAddTextInLine, leftText,
+                middleText, rightText, mode
+            )
+        } catch (ex: DeadObjectException) {
+            throw ex
+        } catch (ex: RemoteException) {
+            throw ex
+        } catch (ex: Exception) {
+            throw ex
+        }
+        // PrinterConfig.addTextInLine.mode.Devide_flexible
     }
 }
