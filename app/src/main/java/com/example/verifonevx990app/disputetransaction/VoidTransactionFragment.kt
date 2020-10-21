@@ -197,6 +197,16 @@ class VoidTransactionFragment : Fragment() {
                                                     1
                                                 )
                                             )
+                                        else {
+                                            startActivity(
+                                                Intent(
+                                                    (activity as BaseActivity),
+                                                    MainActivity::class.java
+                                                ).apply {
+                                                    flags =
+                                                        Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                                })
+                                        }
                                     }
 
                                 }  //  Success case

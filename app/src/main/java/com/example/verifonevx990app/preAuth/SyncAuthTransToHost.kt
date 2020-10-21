@@ -95,6 +95,16 @@ class SyncAuthTransToHost(activityContext: BaseActivity) {
                                                     1
                                                 ), activityContext!!
                                             )
+                                        else {
+                                            activityContext?.startActivity(
+                                                Intent(
+                                                    (activityContext as BaseActivity),
+                                                    MainActivity::class.java
+                                                ).apply {
+                                                    flags =
+                                                        Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                                })
+                                        }
                                     }
                                 },
                                 {})
