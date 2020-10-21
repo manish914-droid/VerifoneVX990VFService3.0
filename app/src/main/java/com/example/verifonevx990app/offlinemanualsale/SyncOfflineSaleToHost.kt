@@ -52,7 +52,6 @@ class SyncOfflineSaleToHost(
                 }
             }
         } else {
-
             GlobalScope.launch(Dispatchers.IO) {
                 val batchData = BatchFileDataTable.selectOfflineSaleBatchData()
                 if (batchData.size > 0) {
@@ -66,12 +65,18 @@ class SyncOfflineSaleToHost(
                             if (offlineSuccess) {
                                 BatchFileDataTable.updateOfflineSaleStatus(batchData[i].invoiceNumber)
                                 VFService.showToast("Offline Sale of Invoice: ${batchData[i].invoiceNumber} Uploaded Successfully")
+                                successList.add(true)
                             } else {
                                 VFService.showToast("Offline Sale of Invoice: ${batchData[i].invoiceNumber} Upload Failed")
+                                successList.add(false)
                             }
                         }
                     }
-                    offlineSyncCB(1, validationMsg ?: "")
+                    if (successList.contains(false)) {
+                        offlineSyncCB(2, validationMsg ?: "")
+                    } else {
+                        offlineSyncCB(1, validationMsg ?: "")
+                    }
                 } else {
                     offlineSyncCB(1, validationMsg ?: "")
                 }
