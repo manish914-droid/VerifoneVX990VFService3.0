@@ -1003,7 +1003,9 @@ object VFEmv : ISO8583(), OnXmlDataParsed {
                 printerReceiptData,
                 EPrintCopyType.MERCHANT,
                 context
-            ) {}
+            ) { printCB, printingFail ->
+
+            }
         }
 
         return printerReceiptData

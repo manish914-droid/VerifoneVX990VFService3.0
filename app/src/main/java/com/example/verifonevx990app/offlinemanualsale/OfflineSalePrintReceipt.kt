@@ -91,8 +91,8 @@ class OfflineSalePrintReceipt {
 
     //Below method is used to print Offline Sale Receipt:-
     fun offlineSalePrint(
-        batch: BatchFileDataTable, copyType: EPrintCopyType,context:Context,
-        printerCB: (Boolean) -> Unit
+        batch: BatchFileDataTable, copyType: EPrintCopyType, context: Context,
+        printerCB: (Boolean, Int) -> Unit
     ) {
         val format = Bundle()
         val fmtAddTextInLine = Bundle()
@@ -207,11 +207,14 @@ class OfflineSalePrintReceipt {
 
                 when (copyType) {
                     EPrintCopyType.MERCHANT -> {
-                        txnSuccessToast(context, context.getString(R.string.offline_transaction_approved))
+                        txnSuccessToast(
+                            context,
+                            context.getString(R.string.offline_transaction_approved)
+                        )
                         GlobalScope.launch(Dispatchers.Main) {
                             delay(1000)
                             (context as BaseActivity).showMerchantAlertBoxOfflineSale(batch) { dialogCB ->
-                                printerCB(dialogCB)
+                                printerCB(dialogCB, 1)
                             }
                         }
                     }
@@ -220,17 +223,17 @@ class OfflineSalePrintReceipt {
                         /*  context?.startActivity(Intent(context, MainActivity::class.java).apply {
                               flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
                           })*/
-                        printerCB(false)
+                        printerCB(false, 1)
                     }
                     EPrintCopyType.DUPLICATE -> {
-                        printerCB(true)
+                        printerCB(true, 1)
                     }
                 }
             }
 
             override fun onError(error: Int) {
                 Log.e("OFFLINE SALE RECEIPT", "FAIL.....")
-                printerCB(false)
+                printerCB(false, 0)
             }
         })
     }

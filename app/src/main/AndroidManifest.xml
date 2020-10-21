@@ -23,10 +23,10 @@
         android:supportsRtl="true"
         android:theme="@style/VxAppThemeNoActionBar"
         tools:targetApi="q">
-        <activity android:name=".preAuth.PendingPreauthActivity"></activity>
+
         <activity
             android:name=".utils.printerUtils.PrinterActivity"
-            android:theme="@style/Theme.AppCompat.Transparent.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Transparent.NoActionBar" />
         <activity
             android:name=".main.MainActivity"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
@@ -53,9 +53,7 @@
             android:name=".emv.transactionprocess.VFTransactionActivity"
             android:theme="@style/VxAppThemeNoActionBar"
             android:windowSoftInputMode="adjustNothing" />
-        <activity
-            android:name=".emv.transactionprocess.CustomPinActivityUpdate"
-            android:windowSoftInputMode="adjustNothing" />
+
         <activity android:name=".nontransaction.EmiActivity" />
 
         <receiver android:name=".main.AutoSettleReceiver">

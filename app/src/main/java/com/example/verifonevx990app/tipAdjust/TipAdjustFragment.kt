@@ -178,7 +178,7 @@ class TipAdjustFragment : Fragment() {
                     PrintUtil(context).startPrinting(
                         batch, EPrintCopyType.MERCHANT,
                         context
-                    ) { alertCB ->
+                    ) { alertCB, printingFail ->
                         context.hideProgress()
                         if (!alertCB) {
                             if (!TextUtils.isEmpty(autoSettlementCheck)) {

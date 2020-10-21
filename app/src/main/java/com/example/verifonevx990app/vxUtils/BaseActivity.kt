@@ -20,10 +20,6 @@ import com.example.verifonevx990app.realmtables.EDashboardItem
 import com.example.verifonevx990app.transactions.TenureDataModel
 import com.example.verifonevx990app.utils.printerUtils.EPrintCopyType
 import com.example.verifonevx990app.utils.printerUtils.PrintUtil
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 abstract class BaseActivity : AppCompatActivity(), IDialog {
@@ -232,7 +228,7 @@ abstract class BaseActivity : AppCompatActivity(), IDialog {
                         batchData,
                         EPrintCopyType.CUSTOMER,
                         this
-                    ) { customerCopyPrintSuccess ->
+                    ) { customerCopyPrintSuccess, printingFail ->
                         if (customerCopyPrintSuccess) {
                             VFService.showToast(getString(R.string.customer_copy_print_success))
                         }
@@ -250,12 +246,13 @@ abstract class BaseActivity : AppCompatActivity(), IDialog {
             getString(R.string.do_you_want_to_print_customer_copy),
             true, getString(R.string.positive_button_yes), { status ->
                 if (status) {
-                        OfflineSalePrintReceipt().offlineSalePrint(batchData,EPrintCopyType.CUSTOMER,
-                            this
-                        ) { printCB ->
-                            dialogCB(false)
+                    OfflineSalePrintReceipt().offlineSalePrint(
+                        batchData, EPrintCopyType.CUSTOMER,
+                        this
+                    ) { printCB, printingFail ->
+                        dialogCB(false)
 
-                        }
+                    }
                 }
             }, {
                 /* startActivity(

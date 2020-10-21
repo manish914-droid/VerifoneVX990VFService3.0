@@ -93,9 +93,12 @@ class TransactionActivity : AppCompatActivity(), OnXmlDataParsed {
             .setCancelable(false)
             .setPositiveButton("Yes") { dialog, _ ->
                 dialog.dismiss()
-                printerUtil.startPrinting(batchData, EPrintCopyType.CUSTOMER, this) {
+                printerUtil.startPrinting(
+                    batchData,
+                    EPrintCopyType.CUSTOMER,
+                    this
+                ) { printCb, printingFail ->
                     //onSuccess or failure code here
-
                 }
             }
             .setNegativeButton("No") { dialog, _ ->

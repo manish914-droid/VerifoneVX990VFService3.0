@@ -535,8 +535,8 @@ SubMenuFragment : Fragment(), IOnSubMenuItemSelectListener {
                                     lastReceiptData,
                                     EPrintCopyType.DUPLICATE,
                                     activity
-                                ) {
-                                    if (it) {
+                                ) { printCB, printingFail ->
+                                    if (printCB) {
                                         iDiag?.hideProgress()
                                         Log.e("PRINTING", "LAST_RECEIPT")
                                     } else {
@@ -549,8 +549,8 @@ SubMenuFragment : Fragment(), IOnSubMenuItemSelectListener {
                                     lastReceiptData,
                                     EPrintCopyType.DUPLICATE,
                                     activity
-                                ) {
-                                    if (it) {
+                                ) { printCB, printingFail ->
+                                    if (printCB) {
                                         iDiag?.hideProgress()
                                         Log.e("PRINTING", "LAST_RECEIPT")
                                     } else {
@@ -588,10 +588,11 @@ SubMenuFragment : Fragment(), IOnSubMenuItemSelectListener {
                             }
                             TransactionType.OFFLINE_SALE.type -> {
                                 activity?.let {
-                                    OfflineSalePrintReceipt().offlineSalePrint(lastReceiptData,EPrintCopyType.DUPLICATE,
+                                    OfflineSalePrintReceipt().offlineSalePrint(
+                                        lastReceiptData, EPrintCopyType.DUPLICATE,
                                         it
-                                    ) {
-                                        if (it) {
+                                    ) { printCB, printingFail ->
+                                        if (printCB) {
                                             iDiag?.hideProgress()
                                             Log.e("PRINTING", "LAST_RECEIPT")
                                         } else {
@@ -600,14 +601,14 @@ SubMenuFragment : Fragment(), IOnSubMenuItemSelectListener {
                                     }
                                 }
                             }
-                            TransactionType.VOID_REFUND.type->{
+                            TransactionType.VOID_REFUND.type -> {
                                 VoidRefundSalePrintReceipt().startPrintingVoidRefund(
                                     lastReceiptData,
                                     TransactionType.VOID_REFUND.type,
                                     EPrintCopyType.DUPLICATE,
                                     activity
                                 ) { printCB, printCBC ->
-                                        iDiag?.hideProgress()
+                                    iDiag?.hideProgress()
                                 }
                             }
                             else -> {
@@ -617,7 +618,7 @@ SubMenuFragment : Fragment(), IOnSubMenuItemSelectListener {
                                 }
                             }
                         }
-                    }else{
+                    } else {
                         GlobalScope.launch(Dispatchers.Main) {
                             //    iDiag?.hideProgress()
                             //    iDiag?.showToast(getString(R.string.empty_batch))
@@ -635,7 +636,7 @@ SubMenuFragment : Fragment(), IOnSubMenuItemSelectListener {
                         }
                     }
 
-                  /*
+                    /*
                     GlobalScope.launch {
                         //  val offList = OfflineSaleTable.selectFromProductCategoryTable()
                         val batchData = BatchFileDataTable.selectBatchData()
@@ -765,8 +766,8 @@ SubMenuFragment : Fragment(), IOnSubMenuItemSelectListener {
                                                 b,
                                                 EPrintCopyType.DUPLICATE,
                                                 activity
-                                            ) {
-                                                if (it) {
+                                            ) { printCB, printingFail ->
+                                                if (printCB) {
                                                     iDiag?.hideProgress()
                                                     Log.e("PRINTING", "LAST_RECEIPT")
                                                 } else {
@@ -779,8 +780,8 @@ SubMenuFragment : Fragment(), IOnSubMenuItemSelectListener {
                                                 b,
                                                 EPrintCopyType.DUPLICATE,
                                                 activity
-                                            ) {
-                                                if (it) {
+                                            ) { printCB, printingFail ->
+                                                if (printCB) {
                                                     iDiag?.hideProgress()
                                                     Log.e("PRINTING", "LAST_RECEIPT")
                                                 } else {
@@ -804,10 +805,11 @@ SubMenuFragment : Fragment(), IOnSubMenuItemSelectListener {
                                         }
                                         TransactionType.OFFLINE_SALE.type -> {
                                             activity?.let { it1 ->
-                                                OfflineSalePrintReceipt().offlineSalePrint(b,EPrintCopyType.DUPLICATE,
+                                                OfflineSalePrintReceipt().offlineSalePrint(
+                                                    b, EPrintCopyType.DUPLICATE,
                                                     it1
-                                                ) {
-                                                    if (it) {
+                                                ) { printCB, printingFail ->
+                                                    if (printCB) {
                                                         iDiag?.hideProgress()
                                                         Log.e("PRINTING", "LAST_RECEIPT")
                                                     } else {

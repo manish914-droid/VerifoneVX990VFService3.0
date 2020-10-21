@@ -8,7 +8,6 @@ import android.os.*
 import android.text.TextUtils
 import android.util.Log
 import android.view.*
-import android.widget.Button
 import android.widget.ImageView
 import androidx.cardview.widget.CardView
 import com.example.verifonevx990app.R
@@ -19,7 +18,6 @@ import com.example.verifonevx990app.main.MainActivity
 import com.example.verifonevx990app.main.PosEntryModeType
 import com.example.verifonevx990app.nontransaction.CreateEMITransactionPacket
 import com.example.verifonevx990app.nontransaction.EmiActivity
-import com.example.verifonevx990app.nontransaction.PinpadPopUpWindow
 import com.example.verifonevx990app.offlinemanualsale.SyncOfflineSaleToHost
 import com.example.verifonevx990app.realmtables.BatchFileDataTable
 import com.example.verifonevx990app.realmtables.EmiBinTable
@@ -629,8 +627,30 @@ class VFTransactionActivity : BaseActivity() {
             stubbedData,
             EPrintCopyType.MERCHANT,
             this
-        ) { dialogCB ->
-            cb(dialogCB)
+        ) { dialogCB, printingFail ->
+            Log.d("Sale Printer Status:- ", printingFail.toString())
+            if (printingFail == 0)
+                GlobalScope.launch(Dispatchers.Main) {
+                    alertBoxWithAction(null,
+                        null,
+                        getString(R.string.printer_error),
+                        getString(R.string.printing_roll_empty_msg),
+                        false,
+                        getString(R.string.positive_button_ok),
+                        {
+                            startActivity(
+                                Intent(
+                                    this@VFTransactionActivity,
+                                    MainActivity::class.java
+                                ).apply {
+                                    flags =
+                                        Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                })
+                        },
+                        {})
+                }
+            else
+                cb(dialogCB)
         }
     }
 
@@ -644,8 +664,34 @@ class VFTransactionActivity : BaseActivity() {
             //Here we are saving printerReceiptData in BatchFileData Table:-
             saveTableInDB(stubbedData)
         }
-        PrintUtil(this).printEMISale(stubbedData, EPrintCopyType.MERCHANT, this) { dialogCB ->
-            emiCB(dialogCB)
+        PrintUtil(this).printEMISale(
+            stubbedData,
+            EPrintCopyType.MERCHANT,
+            this
+        ) { dialogCB, printingFail ->
+            Log.d("Sale Printer Status:- ", printingFail.toString())
+            if (printingFail == 0)
+                GlobalScope.launch(Dispatchers.Main) {
+                    alertBoxWithAction(null,
+                        null,
+                        getString(R.string.printer_error),
+                        getString(R.string.printing_roll_empty_msg),
+                        false,
+                        getString(R.string.positive_button_ok),
+                        {
+                            startActivity(
+                                Intent(
+                                    this@VFTransactionActivity,
+                                    MainActivity::class.java
+                                ).apply {
+                                    flags =
+                                        Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                })
+                        },
+                        {})
+                }
+            else
+                emiCB(dialogCB)
         }
         /* val intent = Intent(this, PrinterActivity::class.java).apply {
              putExtra("printingType", EPrinting.START_EMI_SALE_PRINTING)
@@ -672,9 +718,9 @@ class VFTransactionActivity : BaseActivity() {
                             batchData,
                             EPrintCopyType.CUSTOMER,
                             this
-                        ) { customerCopyPrintSuccess ->
+                        ) { customerCopyPrintSuccess, printingFail ->
                             if (!customerCopyPrintSuccess) {
-                              //  VFService.showToast(getString(R.string.customer_copy_print_success))
+                                //  VFService.showToast(getString(R.string.customer_copy_print_success))
                                 dialogCB(false)
                             }
                         }
@@ -683,9 +729,9 @@ class VFTransactionActivity : BaseActivity() {
                             batchData,
                             EPrintCopyType.CUSTOMER,
                             this
-                        ) { customerCopyPrintSuccess ->
+                        ) { customerCopyPrintSuccess, printingFail ->
                             if (!customerCopyPrintSuccess) {
-                               // VFService.showToast(getString(R.string.customer_copy_print_success))
+                                // VFService.showToast(getString(R.string.customer_copy_print_success))
                                 dialogCB(false)
                             }
                         }

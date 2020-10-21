@@ -147,7 +147,7 @@ class PrintUtil(context: Context?) {
         printerReceiptData: BatchFileDataTable,
         copyType: EPrintCopyType,
         context: Context?,
-        printerCallback: (Boolean) -> Unit
+        printerCallback: (Boolean, Int) -> Unit
     ) {
         //  printer=null
         try {
@@ -645,7 +645,7 @@ class PrintUtil(context: Context?) {
         printerReceiptData: BatchFileDataTable,
         copyType: EPrintCopyType,
         context: Context?,
-        printerCallback: (Boolean) -> Unit
+        printerCallback: (Boolean, Int) -> Unit
     ) {
         logger("PRINT STATUS", (printer?.status).toString())
         val signatureMsg = if (printerReceiptData.isPinverified) {
@@ -2316,7 +2316,7 @@ class PrintUtil(context: Context?) {
         printerReceiptData: BatchFileDataTable,
         copyType: EPrintCopyType,
         context: Context?,
-        printerCallback: (Boolean) -> Unit
+        printerCallback: (Boolean, Int) -> Unit
     ) {
         try {
             hasPin(printerReceiptData)
@@ -2579,18 +2579,18 @@ class PrintUtil(context: Context?) {
                                         printerReceiptData,
                                         true
                                     ) { dialogCB ->
-                                        printerCallback(dialogCB)
+                                        printerCallback(dialogCB, 1)
                                     }
                             }
 
                         }
                         EPrintCopyType.CUSTOMER -> {
                             //VFService.showToast("Customer Transaction Slip Printed Successfully")
-                            printerCallback(false)
+                            printerCallback(false, 1)
                         }
                         EPrintCopyType.DUPLICATE -> {
                             VFService.showToast("Success")
-                            printerCallback(true)
+                            printerCallback(true, 1)
                         }
                     }
                 }
@@ -2598,10 +2598,10 @@ class PrintUtil(context: Context?) {
                 override fun onError(error: Int) {
                     if (error == 240) {
                         //VFService.showToast("Printing roll not available..")
-                        printerCallback(false)
+                        printerCallback(false, 0)
                     } else {
                         //VFService.showToast("Printer Error------> $error")
-                        printerCallback(false)
+                        printerCallback(false, 0)
                     }
                 }
             })
@@ -2920,16 +2920,18 @@ internal data class SummeryTotalType(var count: Int = 0, var total: Long = 0)
 internal open class IPrintListener(
     var printerUtil: PrintUtil,
     var context: Context?,
-    var copyType: EPrintCopyType, var batch: BatchFileDataTable, var isSuccess: (Boolean) -> Unit
+    var copyType: EPrintCopyType,
+    var batch: BatchFileDataTable,
+    var isSuccess: (Boolean, Int) -> Unit
 ) : PrinterListener.Stub() {
     @Throws(RemoteException::class)
     override fun onError(error: Int) {
         if (error == 240)
         //VFService.showToast("Printing roll not available..")
-            isSuccess(true)
+            isSuccess(true, 0)
         else
         //VFService.showToast("Printer Error------> $error")
-            isSuccess(false)
+            isSuccess(false, 0)
     }
 
     @Throws(RemoteException::class)
@@ -2965,14 +2967,14 @@ internal open class IPrintListener(
                             printerUtil,
                             batch
                         ) { dialogCB ->
-                            isSuccess(dialogCB)
+                            isSuccess(dialogCB, 1)
                         }
                     } else {
                         (context as VFTransactionActivity).showMerchantAlertBox(
                             printerUtil,
                             batch
                         ) { dialogCB ->
-                            isSuccess(dialogCB)
+                            isSuccess(dialogCB, 1)
                         }
                     }
                 }
@@ -2980,10 +2982,10 @@ internal open class IPrintListener(
             }
             EPrintCopyType.CUSTOMER -> {
                 //VFService.showToast("Customer Transaction Slip Printed Successfully")
-                isSuccess(false)
+                isSuccess(false, 1)
             }
             EPrintCopyType.DUPLICATE -> {
-                isSuccess(true)
+                isSuccess(true, 1)
             }
         }
     }

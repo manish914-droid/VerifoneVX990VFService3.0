@@ -7,7 +7,6 @@ import com.example.verifonevx990app.vxUtils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class SyncOfflineSaleToHost(
     var context: Context,
@@ -29,7 +28,6 @@ class SyncOfflineSaleToHost(
                         val isoByteArray = isoData.generateIsoByteRequest()
                    //     withContext(Dispatchers.IO) {
                         sendOfflineSaleToHost(isoByteArray) { offlineSuccess, serverValidationMsg ->
-                            if(serverValidationMsg != "null")
                             validationMsg = serverValidationMsg
                             if (offlineSuccess) {
                                 BatchFileDataTable.updateOfflineSaleStatus(batchData[i].invoiceNumber)
@@ -61,6 +59,7 @@ class SyncOfflineSaleToHost(
                             CreateOfflineSalePacket(batchData[i]).createOfflineSalePacket()
                         val isoByteArray = isoData.generateIsoByteRequest()
                         sendOfflineSaleToHost(isoByteArray) { offlineSuccess, serverValidationMsg ->
+                            validationMsg = serverValidationMsg
                             if (offlineSuccess) {
                                 BatchFileDataTable.updateOfflineSaleStatus(batchData[i].invoiceNumber)
                                 VFService.showToast("Offline Sale of Invoice: ${batchData[i].invoiceNumber} Uploaded Successfully")
@@ -98,8 +97,14 @@ class SyncOfflineSaleToHost(
                     responseIsoData.isoMap[39]?.parseRaw2String().toString() + "---->" +
                             responseIsoData.isoMap[58]?.parseRaw2String().toString()
                 )
+
+                var serverValidationMsg: String? = null
                 val successResponseCode = (responseIsoData.isoMap[39]?.parseRaw2String().toString())
-                val serverValidationMsg = (responseIsoData.isoMap[58]?.parseRaw2String().toString())
+                serverValidationMsg = if (responseIsoData.isoMap[58] != null) {
+                    (responseIsoData.isoMap[58]?.parseRaw2String().toString())
+                } else {
+                    ""
+                }
                 isBool = successResponseCode == "00"
                 offlineSaleCB(isBool, serverValidationMsg)
             } else {

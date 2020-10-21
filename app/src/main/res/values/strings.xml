@@ -314,5 +314,6 @@
     <string name="offline_sale">Offline Sale</string>
     <string name="offline_sale_uploading">Offline Sale Uploading</string>
     <string name="fail">Fail :- </string>
+    <string name="printing_roll_empty_msg">Please Check</string>
 
 </resources>

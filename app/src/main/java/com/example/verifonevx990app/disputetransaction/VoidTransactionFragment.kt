@@ -234,14 +234,17 @@ class VoidTransactionFragment : Fragment() {
 
                                             // Saving for Last Success Receipt
                                             val lastSuccessReceiptData = Gson().toJson(voidData)
-                                            AppPreference.saveString(AppPreference.LAST_SUCCESS_RECEIPT_KEY, lastSuccessReceiptData)
+                                            AppPreference.saveString(
+                                                AppPreference.LAST_SUCCESS_RECEIPT_KEY,
+                                                lastSuccessReceiptData
+                                            )
 
                                             PrintUtil(activity).startPrinting(
                                                 voidData,
                                                 EPrintCopyType.MERCHANT,
                                                 activity as BaseActivity
-                                            ) {
-                                                if (!it) {
+                                            ) { printCB, printingFail ->
+                                                if (!printCB) {
                                                     val autoSettlementCheck =
                                                         respnosedatareader.isoMap.get(60)
                                                             ?.parseRaw2String()

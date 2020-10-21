@@ -1,6 +1,5 @@
 package com.example.verifonevx990app.offlinemanualsale
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -146,27 +145,48 @@ class OfflineManualSaleInputFragment : Fragment(R.layout.fragment_offline_manual
                 //Save Server Hit Status in Preference , To Restrict Init and KeyExchange from Terminal:-
                 AppPreference.saveBoolean(PrefConstant.SERVER_HIT_STATUS.keyName.toString(), true)
                 activity?.let {
-                    OfflineSalePrintReceipt().offlineSalePrint(batchData,EPrintCopyType.MERCHANT, it) { printCB ->
-                        if (VFService.vfPrinter?.status == 0) {
-                            GlobalScope.launch(Dispatchers.Main) {
-                                (activity as MainActivity).hideProgress()
-                            //    txnSuccessToast(activity!!, getString(R.string.offline_transaction_approved))
-                                if (!printCB) {
-                                    TerminalParameterTable.updateTerminalDataInvoiceNumber(terminalData?.invoiceNumber.toString())
-                                    //Below we are incrementing previous ROC (Because ROC will always be incremented whenever Server Hit is performed:-
-                                    ROCProviderV2.incrementFromResponse(ROCProviderV2.getRoc(AppPreference.getBankCode()).toString(), AppPreference.getBankCode())
+                    OfflineSalePrintReceipt().offlineSalePrint(
+                        batchData,
+                        EPrintCopyType.MERCHANT,
+                        it
+                    ) { printCB, printingFail ->
+                        GlobalScope.launch(Dispatchers.Main) {
+                            (activity as MainActivity).hideProgress()
+                            if (!printCB) {
+                                TerminalParameterTable.updateTerminalDataInvoiceNumber(terminalData?.invoiceNumber.toString())
+                                //Below we are incrementing previous ROC (Because ROC will always be incremented whenever Server Hit is performed:-
+                                ROCProviderV2.incrementFromResponse(
+                                    ROCProviderV2.getRoc(
+                                        AppPreference.getBankCode()
+                                    ).toString(), AppPreference.getBankCode()
+                                )
+                                if (printingFail == 0) {
+                                    (activity as MainActivity).alertBoxWithAction(null,
+                                        null,
+                                        getString(R.string.printer_error),
+                                        getString(R.string.printing_roll_empty_msg),
+                                        false,
+                                        getString(R.string.positive_button_ok),
+                                        {
+                                            startActivity(
+                                                Intent(
+                                                    activity,
+                                                    MainActivity::class.java
+                                                ).apply {
+                                                    flags =
+                                                        Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                                })
+                                        },
+                                        {})
+                                } else {
                                     startActivity(Intent(activity, MainActivity::class.java).apply {
-                                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                        flags =
+                                            Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                     })
-                                } else
+                                }
+                            } else
                                     VFService.showToast(getString(R.string.something_went_wrong))
                             }
-                        }
-                        else{
-                            (activity as MainActivity).hideProgress()
-                            ROCProviderV2.incrementFromResponse(ROCProviderV2.getRoc(AppPreference.getBankCode()).toString(), AppPreference.getBankCode())
-                            VFService.showToast(getString(R.string.printer_error))
-                        }
                     }
                 }
             }
