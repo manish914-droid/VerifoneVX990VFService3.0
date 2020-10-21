@@ -319,5 +319,6 @@
     <string name="offline_sale_uploading">Offline Sale Uploading</string>
     <string name="fail">Fail :- </string>
     <string name="printing_roll_empty_msg">Please Check</string>
+    <string name="please_check_printing_roll">Want To Settle without Settlement Reports?</string>
 
 </resources>

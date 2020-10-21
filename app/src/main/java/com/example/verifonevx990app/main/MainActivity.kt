@@ -496,11 +496,11 @@ class MainActivity : BaseActivity(), IFragmentRequest,
     private fun decideHome() {//AppPreference.getLogin()
 
         if (AppPreference.getLogin()) {
-          //  init_ll.visibility = View.VISIBLE
-           // key_exchange_ll.visibility = View.VISIBLE
+            //  init_ll.visibility = View.VISIBLE
+            // key_exchange_ll.visibility = View.VISIBLE
             report_ll.visibility = View.VISIBLE
-           // app_update_ll.visibility = View.VISIBLE
-          //  key_exchange_hdfc_ll.visibility = View.VISIBLE
+            // app_update_ll.visibility = View.VISIBLE
+            //  key_exchange_hdfc_ll.visibility = View.VISIBLE
             transactFragment(DashboardFragment(), isBackStackAdded = true)
         } else {
             GlobalScope.launch {
@@ -516,18 +516,22 @@ class MainActivity : BaseActivity(), IFragmentRequest,
 
             }
 
-          //  init_ll.visibility = View.GONE
-         //   key_exchange_ll.visibility = View.GONE
-          //  key_exchange_hdfc_ll.visibility = View.GONE
+            //  init_ll.visibility = View.GONE
+            //   key_exchange_ll.visibility = View.GONE
+            //  key_exchange_hdfc_ll.visibility = View.GONE
             report_ll.visibility = View.GONE
-         //   app_update_ll.visibility = View.GONE
+            //   app_update_ll.visibility = View.GONE
             //initFragment
             transactFragment(initFragment, isBackStackAdded = false)
         }
 
     }
 
-    override fun onFragmentRequest(action: UiAction, data: Any , extraPairData: Pair<String , String>?) {
+    override fun onFragmentRequest(
+        action: UiAction,
+        data: Any,
+        extraPairData: Pair<String, String>?
+    ) {
         when (action) {
             UiAction.INIT_WITH_KEY_EXCHANGE -> {
                 if (checkInternetConnection()) {
@@ -932,14 +936,15 @@ class MainActivity : BaseActivity(), IFragmentRequest,
     ) {
         if (!AppPreference.getBoolean(PrefConstant.BLOCK_MENU_OPTIONS.keyName.toString()) &&
             !AppPreference.getBoolean(PrefConstant.INSERT_PPK_DPK.keyName.toString()) &&
-            !AppPreference.getBoolean(PrefConstant.INIT_AFTER_SETTLEMENT.keyName.toString())) {
+            !AppPreference.getBoolean(PrefConstant.INIT_AFTER_SETTLEMENT.keyName.toString())
+        ) {
             transactFragment(fragment.apply {
                 arguments = Bundle().apply {
                     putSerializable("type", action)
                     putString(INPUT_SUB_HEADING, subHeading)
                 }
             }, false)
-        }else{
+        } else {
             if (checkInternetConnection())
                 checkAndPerformOperation()
             else VFService.showToast(getString(R.string.no_internet_available_please_check_your_internet))
@@ -970,7 +975,7 @@ class MainActivity : BaseActivity(), IFragmentRequest,
         }
 
     }
-    
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.home -> {
@@ -1127,6 +1132,7 @@ class MainActivity : BaseActivity(), IFragmentRequest,
             VFService.showToast(getString(R.string.no_internet_available_please_check_your_internet))
         }
     }
+
     //Settle Batch and Do the Init:-
     suspend fun settleBatch(settlementByteArray: ByteArray?) {
         runOnUiThread {
@@ -1194,12 +1200,6 @@ class MainActivity : BaseActivity(), IFragmentRequest,
                         val batchList = BatchFileDataTable.selectBatchData()
 
                         //Batch and Roc Increment for Settlement:-
-                        val batchNumber =
-                            AppPreference.getIntData(PrefConstant.SETTLEMENT_BATCH_INCREMENT.keyName.toString()) + 1
-
-                        AppPreference.setIntData(
-                            PrefConstant.SETTLEMENT_BATCH_INCREMENT.keyName.toString(), batchNumber
-                        )
 
                         val settlement_roc =
                             AppPreference.getIntData(PrefConstant.SETTLEMENT_ROC_INCREMENT.keyName.toString()) + 1
@@ -1218,7 +1218,7 @@ class MainActivity : BaseActivity(), IFragmentRequest,
 
                                 //Added by Lucky Singh.
                                 //Delete Last Success Receipt From App Preference.
-                                AppPreference.saveString(AppPreference.LAST_SUCCESS_RECEIPT_KEY,"")
+                                AppPreference.saveString(AppPreference.LAST_SUCCESS_RECEIPT_KEY, "")
 
                                 //Added by Manish Kumar
                                 //Reset Roc and Invoice by 1.
@@ -1228,9 +1228,12 @@ class MainActivity : BaseActivity(), IFragmentRequest,
                                 TerminalParameterTable.updateTerminalDataInvoiceNumber("0")
 
                                 //Here we are incrementing sale batch number also for next sale:-
-                                TerminalParameterTable.updateSaleBatchNumber(batchNumber.toString())
+                                TerminalParameterTable.updateSaleBatchNumber(
+                                    terminalParameterTable?.batchNumber ?: ""
+                                )
                                 GlobalScope.launch(Dispatchers.Main) {
-                                    alertBoxWithAction(null,
+                                    alertBoxWithAction(
+                                        null,
                                         null,
                                         getString(R.string.settlement_success),
                                         getString(R.string.settlement_successfully_done),
@@ -1333,8 +1336,141 @@ class MainActivity : BaseActivity(), IFragmentRequest,
                                         },
                                         {})
                                 }
-                            } else
+                            } else {
+                                GlobalScope.launch(Dispatchers.Main) {
+                                    hideProgress()
+                                    //Added by Ajay Thakur
+                                    //Saving Batch Data For Last Summary Report
+                                    saveBatchInPreference(batchList)
+                                    //Delete All BatchFile Data from Table after Settlement:-
+                                    deleteBatchTableDataInDB()
+
+                                    //Added by Lucky Singh.
+                                    //Delete Last Success Receipt From App Preference.
+                                    AppPreference.saveString(
+                                        AppPreference.LAST_SUCCESS_RECEIPT_KEY,
+                                        ""
+                                    )
+
+                                    //Added by Manish Kumar
+                                    //Reset Roc and Invoice by 1.
+                                    ROCProviderV2.resetRoc(AppPreference.getBankCode())
+
+                                    //Added by Ajay Thakur
+                                    TerminalParameterTable.updateTerminalDataInvoiceNumber("0")
+
+                                    //Here we are incrementing sale batch number also for next sale:-
+                                    TerminalParameterTable.updateSaleBatchNumber(
+                                        terminalParameterTable?.batchNumber ?: ""
+                                    )
+                                    GlobalScope.launch(Dispatchers.Main) {
+                                        alertBoxWithAction(
+                                            null,
+                                            null,
+                                            getString(R.string.settlement_success),
+                                            getString(R.string.settlement_successfully_done),
+                                            false,
+                                            getString(R.string.positive_button_ok),
+                                            {
+                                                runOnUiThread {
+                                                    if (!TextUtils.isEmpty(isAppUpdateAvailableData) && isAppUpdateAvailableData != "00" && isAppUpdateAvailableData != "01") {
+                                                        val dataList =
+                                                            isAppUpdateAvailableData?.split("|") as MutableList<String>
+                                                        if (dataList.size > 1) {
+                                                            onBackPressed()
+                                                            writeAppVersionNameInFile(this@MainActivity)
+                                                            when (dataList[0]) {
+                                                                AppUpdate.MANDATORY_APP_UPDATE.updateCode -> {
+                                                                    if (terminalParameterTable?.reservedValues?.length == 20 &&
+                                                                        terminalParameterTable.reservedValues.endsWith(
+                                                                            "1"
+                                                                        )
+                                                                    )
+                                                                        startFTPAppUpdate(
+                                                                            dataList[2],
+                                                                            dataList[3].toInt(),
+                                                                            dataList[4],
+                                                                            dataList[5],
+                                                                            dataList[7]
+                                                                        )
+                                                                    /*else
+                                                                startHTTPSAppUpdate()*/ //------------>HTTPS App Update not in use currently
+                                                                }
+                                                                AppUpdate.OPTIONAL_APP_UPDATE.updateCode -> {
+                                                                    alertBoxWithAction(
+                                                                        null,
+                                                                        null,
+                                                                        getString(R.string.app_update),
+                                                                        getString(R.string.app_update_available_do_you_want_to_update),
+                                                                        true,
+                                                                        getString(R.string.yes),
+                                                                        {
+                                                                            if (terminalParameterTable?.reservedValues?.length == 20 &&
+                                                                                terminalParameterTable.reservedValues.endsWith(
+                                                                                    "1"
+                                                                                )
+                                                                            )
+                                                                                startFTPAppUpdate(
+                                                                                    dataList[2],
+                                                                                    dataList[3].toInt(),
+                                                                                    dataList[4],
+                                                                                    dataList[5],
+                                                                                    dataList[7]
+                                                                                )
+                                                                            /*else
+                                                                    startHTTPSAppUpdate()*/ //------------>HTTPS App Update not in use currently
+                                                                        },
+                                                                        {})
+                                                                }
+                                                                else -> {
+                                                                    onBackPressed()
+                                                                }
+                                                            }
+                                                        } else {
+                                                            VFService.showToast(getString(R.string.something_went_wrong_in_app_update))
+                                                            onBackPressed()
+                                                        }
+                                                    } else {
+                                                        onBackPressed()
+                                                        when (isAppUpdateAvailableData) {
+                                                            "00" -> {
+                                                                if (terminalParameterTable != null) {
+                                                                    val tid =
+                                                                        terminalParameterTable.terminalId.toLong()
+                                                                            .toString()
+                                                                    showProgress()
+                                                                    KeyExchanger(
+                                                                        tid,
+                                                                        ::onInitResponse
+                                                                    ).apply {
+                                                                        keWithInit = true
+                                                                    }.insertPPKDPKAfterSettlement()
+                                                                }
+                                                            }
+
+                                                            "01" -> {
+                                                                if (terminalParameterTable != null) {
+                                                                    val tid =
+                                                                        terminalParameterTable.terminalId.toLong()
+                                                                            .toString()
+                                                                    showProgress()
+                                                                    KeyExchanger(
+                                                                        tid,
+                                                                        ::onInitResponse
+                                                                    ).apply {
+                                                                        keWithInit = true
+                                                                    }.startExchange()
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {})
+                                    }
+                                }
                                 VFService.showToast(getString(R.string.printing_error))
+                            }
                         }
                     } else {
                         runOnUiThread {
@@ -1433,7 +1569,7 @@ enum class PrefConstant(val keyName: Any) {
 }
 
 //Below Enum Class is used to detect different card Types:-
-enum class DetectCardType(val cardType : Int,val cardTypeName:String="") {
+enum class DetectCardType(val cardType: Int, val cardTypeName: String = "") {
     CARD_ERROR_TYPE(0),
     MAG_CARD_TYPE(1, "Mag"),
     EMV_CARD_TYPE(2, "Chip"),
@@ -1499,6 +1635,7 @@ enum class PosEntryModeType(val posEntry: Int) {
 
     //Manual with cvv
     POS_ENTRY_MANUAL_4DBC(573),
+
     //Manual without cvv
     POS_ENTRY_MANUAL_NO4DBC(513),
 
@@ -1517,7 +1654,7 @@ enum class PosEntryModeType(val posEntry: Int) {
 
 
 //Below ENUM class for the Error Response Code we get from Host:-
-enum class ServerResponseCode(val code : Int){
+enum class ServerResponseCode(val code: Int) {
     SAME_ROC_EXIST(17),
     DENY_PICK_UP_CARD(69),
     INTERNAL_SERVER_ERROR(99),
@@ -1542,6 +1679,6 @@ enum class ConnectionError(val errorCode: Int) {
 }
 
 interface IFragmentRequest {
-    fun onFragmentRequest(action: UiAction, data: Any , extraPairData: Pair<String , String>? = null)
+    fun onFragmentRequest(action: UiAction, data: Any, extraPairData: Pair<String, String>? = null)
     fun onTransactionRequest(action: EDashboardItem)
 }

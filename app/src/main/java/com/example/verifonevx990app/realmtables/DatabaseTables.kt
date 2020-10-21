@@ -2093,7 +2093,7 @@ open class TerminalParameterTable() : RealmObject(), Parcelable {
             getRealm {
                 val tp = it.where(TerminalParameterTable::class.java).findFirst()
                 it.beginTransaction()
-                tp?.batchNumber = invoiceWithPadding(batchNumber)
+                tp?.batchNumber = invoiceWithPadding(batchNumber) + 1
                 it.commitTransaction()
             }.await()
         }

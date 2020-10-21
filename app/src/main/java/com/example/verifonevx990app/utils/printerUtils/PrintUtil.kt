@@ -1971,10 +1971,7 @@ class PrintUtil(context: Context?) {
                 TransactionType.VOID_PREAUTH.type -> {
                     baseAmount =
                         "%.2f".format(printerReceiptData.amountInResponse.toDouble() / 100)
-
                 }
-
-
             }
 
             printer?.addTextInLine(
@@ -2030,7 +2027,6 @@ class PrintUtil(context: Context?) {
             printer?.addText(format, copyType.pName)
             printer?.addText(format, footerText[0])
             printer?.addText(format, footerText[1])
-
 
 
 
