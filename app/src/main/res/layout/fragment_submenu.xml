@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/sidebar_separator_bg">
+
+    <com.example.verifonevx990app.vxUtils.BHTextView
+        android:layout_width="match_parent"
+        android:id="@+id/f_sm_title_tv"
+        android:layout_height="@dimen/item_dashboard_size"
+        android:background="@color/white"
+        android:textColor="@color/black"
+        android:gravity="start|center"
+        android:textSize="@dimen/text_size_xregular"
+        android:paddingStart="@dimen/pad_32"
+        android:paddingEnd="@dimen/pad_32"
+        android:layout_marginBottom="1dp"
+        app:fname = "bold"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/f_sm_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+            android:nestedScrollingEnabled="true"
+        />
+
+
+
+</LinearLayout>

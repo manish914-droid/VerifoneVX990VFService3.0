@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/pad_8"
+    android:layout_margin="@dimen/pad_4"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+<LinearLayout
+    android:id="@+id/custom_toast_layout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/pad_32"
+    android:paddingStart="@dimen/pad_4"
+    android:paddingEnd="@dimen/pad_4"
+    android:background="@color/colorPrimary">
+
+    <ImageView
+        android:src="@drawable/ic_check"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+
+        android:layout_gravity="center"
+        android:contentDescription="@string/transaction_approved_successfully"
+        android:padding="@dimen/pad_16" />
+
+
+
+    <com.example.verifonevx990app.vxUtils.BHTextView
+        android:id="@+id/txtvw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       android:gravity="center"
+        android:layout_gravity="center"
+        android:text="@string/transaction_approved_successfully"
+        android:textColor="@color/white"
+        android:textSize="26sp" />
+</LinearLayout>
+</androidx.cardview.widget.CardView>
+
+<!--#00E676-->

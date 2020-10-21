@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:id="@+id/whole_layout"
+        android:background="@drawable/toast_bg"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:paddingLeft="10dp"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:id="@+id/toast_successTv"
+                android:layout_width="wrap_content"
+                android:textSize="18sp"
+                android:layout_height="wrap_content"
+                android:text="seuccess"
+                android:layout_gravity="center_vertical" />
+            <TextView
+                android:paddingLeft="10dp"
+                android:textColor="#ffffff"
+                android:textStyle="normal"
+                android:paddingBottom="10dp"
+                android:textSize="16sp"
+                android:id="@+id/toast_Tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="The image has been uploaded to server."
+                android:layout_gravity="center_vertical" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

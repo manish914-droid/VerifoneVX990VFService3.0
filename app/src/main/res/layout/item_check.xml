@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.verifonevx990app.vxUtils.BHCheckBox
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="@dimen/pad_10"
+    android:paddingBottom="@dimen/pad_10"
+    android:paddingStart="@dimen/pad_5"
+    android:paddingEnd="@dimen/pad_5"
+    android:textColor="@color/text_active"
+    android:textSize="@dimen/text_size_regular"
+    android:background="@color/white"
+    app:fname="regular" android:layout_margin="1dp">
+
+</com.example.verifonevx990app.vxUtils.BHCheckBox>
