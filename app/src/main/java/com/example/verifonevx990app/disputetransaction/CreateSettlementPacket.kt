@@ -21,7 +21,6 @@ class CreateSettlementPacket(private var settlementProcessingCode: String? = nul
 
             //adding stan (padding of stan is internally handled by iso)
             var settlementRoc = 0
-            var batchNumber = 0
             if (AppPreference.getIntData(PrefConstant.SETTLEMENT_ROC_INCREMENT.keyName.toString()) == 0) {
                 settlementRoc = if (batchList.size > 0)
                     (batchList[batchList.size - 1].roc).toInt()
@@ -35,20 +34,6 @@ class CreateSettlementPacket(private var settlementProcessingCode: String? = nul
             } else {
                 settlementRoc =
                     AppPreference.getIntData(PrefConstant.SETTLEMENT_ROC_INCREMENT.keyName.toString())
-            }
-
-            if (AppPreference.getIntData(PrefConstant.SETTLEMENT_BATCH_INCREMENT.keyName.toString()) == 0) {
-                batchNumber = if (batchList.size > 0)
-                    (batchList[0].batchNumber).toInt()
-                else
-                    tpt.batchNumber.toInt()
-                AppPreference.setIntData(
-                    PrefConstant.SETTLEMENT_BATCH_INCREMENT.keyName.toString(), batchNumber
-                )
-            } else {
-                //Incremented Batch Number from Previous Batch:-
-                batchNumber =
-                    AppPreference.getIntData(PrefConstant.SETTLEMENT_BATCH_INCREMENT.keyName.toString())
             }
 
             //ROC will not go in case of AMEX on all PORT:-
@@ -67,7 +52,7 @@ class CreateSettlementPacket(private var settlementProcessingCode: String? = nul
             addFieldByHex(48, ConnectionTimeStamps.getStamp())
 
             //Batch Number
-            addFieldByHex(60, addPad(batchNumber, "0", 6, true))
+            addFieldByHex(60, addPad(tpt.batchNumber, "0", 6, true))
 
             //adding field 61
             addFieldByHex(

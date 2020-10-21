@@ -1200,12 +1200,6 @@ class MainActivity : BaseActivity(), IFragmentRequest,
                         val batchList = BatchFileDataTable.selectBatchData()
 
                         //Batch and Roc Increment for Settlement:-
-                        val batchNumber =
-                            AppPreference.getIntData(PrefConstant.SETTLEMENT_BATCH_INCREMENT.keyName.toString()) + 1
-
-                        AppPreference.setIntData(
-                            PrefConstant.SETTLEMENT_BATCH_INCREMENT.keyName.toString(), batchNumber
-                        )
 
                         val settlement_roc =
                             AppPreference.getIntData(PrefConstant.SETTLEMENT_ROC_INCREMENT.keyName.toString()) + 1
@@ -1234,9 +1228,12 @@ class MainActivity : BaseActivity(), IFragmentRequest,
                                 TerminalParameterTable.updateTerminalDataInvoiceNumber("0")
 
                                 //Here we are incrementing sale batch number also for next sale:-
-                                TerminalParameterTable.updateSaleBatchNumber(batchNumber.toString())
+                                TerminalParameterTable.updateSaleBatchNumber(
+                                    terminalParameterTable?.batchNumber ?: ""
+                                )
                                 GlobalScope.launch(Dispatchers.Main) {
-                                    alertBoxWithAction(null,
+                                    alertBoxWithAction(
+                                        null,
                                         null,
                                         getString(R.string.settlement_success),
                                         getString(R.string.settlement_successfully_done),
@@ -1363,9 +1360,12 @@ class MainActivity : BaseActivity(), IFragmentRequest,
                                     TerminalParameterTable.updateTerminalDataInvoiceNumber("0")
 
                                     //Here we are incrementing sale batch number also for next sale:-
-                                    TerminalParameterTable.updateSaleBatchNumber(batchNumber.toString())
+                                    TerminalParameterTable.updateSaleBatchNumber(
+                                        terminalParameterTable?.batchNumber ?: ""
+                                    )
                                     GlobalScope.launch(Dispatchers.Main) {
-                                        alertBoxWithAction(null,
+                                        alertBoxWithAction(
+                                            null,
                                             null,
                                             getString(R.string.settlement_success),
                                             getString(R.string.settlement_successfully_done),
