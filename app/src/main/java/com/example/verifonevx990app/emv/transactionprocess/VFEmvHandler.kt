@@ -816,8 +816,30 @@ class VFEmvHandler(var activity: Activity,var handler: Handler, var iemv: IEMV?,
                 ok_btnn.setOnClickListener {
                     // iemv?.importAppSelection(appSelectedPosition)
                     logger("OkBtn", "$appSelectedPosition  ", "e")
-                    multiAppCB(appSelectedPosition)
-                    dialog.dismiss()
+                    try {
+                        multiAppCB(appSelectedPosition)
+                        dialog.dismiss()
+                    } catch (ex: java.lang.Exception) {
+                        ex.printStackTrace()
+                        dialog.dismiss()
+                        (activity as VFTransactionActivity).alertBoxWithAction(null,
+                            null,
+                            activity.getString(R.string.app_selection_failed),
+                            activity.getString(R.string.please_reinitiate_transaction),
+                            false,
+                            activity.getString(R.string.positive_button_ok),
+                            {
+                                activity.startActivity(
+                                    Intent(
+                                        activity,
+                                        MainActivity::class.java
+                                    ).apply {
+                                        flags =
+                                            Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    })
+                            },
+                            {})
+                    }
                 }
             }.show()
         }
