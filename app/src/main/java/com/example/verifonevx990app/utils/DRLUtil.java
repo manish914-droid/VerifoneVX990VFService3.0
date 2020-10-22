@@ -21,7 +21,7 @@ package com.example.verifonevx990app.utils;
  *    |                                                |      *
  *    '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-='      *
  *                                                            *
- *           LASCIATE OGNI SPERANZA, VOI CH'ENTRATE           *
+ *           File Modified by - Ajay Thakur                   *
  **************************************************************
  *
  **/
@@ -58,10 +58,12 @@ public class DRLUtil {
         byte[] clssTransLimit = null;
         byte[] clssRequiredLimit = null;
         drlDataList.clear();
+
         drlID = new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF,
                 (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF,
                 (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF,
                 (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
+
         clssFloorLimit = new byte[]{0, 0, 0, 0, 0, 0}; // Default value cls floor limit
 
         //CTLS Transaction Limit ByteArray:-

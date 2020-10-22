@@ -107,7 +107,7 @@ class SettlementFragment : Fragment(R.layout.activity_settlement_view) {
                                                             null,
                                                             getString(R.string.printer_error),
                                                             getString(R.string.please_check_printing_roll),
-                                                            false,
+                                                            true,
                                                             getString(R.string.positive_button_ok),
                                                             {
                                                                 val data = CreateSettlementPacket(
@@ -212,8 +212,8 @@ class SettlementFragment : Fragment(R.layout.activity_settlement_view) {
                                                                     null,
                                                                     getString(R.string.printer_error),
                                                                     getString(R.string.please_check_printing_roll),
-                                                                    false,
-                                                                    getString(R.string.positive_button_ok),
+                                                                    true,
+                                                                    getString(R.string.yes),
                                                                     {
                                                                         val data =
                                                                             CreateSettlementPacket(
@@ -269,7 +269,7 @@ class SettlementFragment : Fragment(R.layout.activity_settlement_view) {
                     } else {
                         GlobalScope.launch(Dispatchers.Main) {
                             (activity as MainActivity).hideProgress()
-                        //    VFService.showToast(msg)
+                            VFService.showToast(msg)
                         }
                     }
                 }
@@ -279,7 +279,6 @@ class SettlementFragment : Fragment(R.layout.activity_settlement_view) {
 
     //Method is to get Sale Batch Data for Void RecyclerView listing:-
     private fun getAndInflateSettlementData() {
-
         if (batchList.size == 0) {
             conditionBasedShowHideViews(false)
         } else {

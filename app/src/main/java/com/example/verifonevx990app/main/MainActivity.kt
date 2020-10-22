@@ -1228,9 +1228,10 @@ class MainActivity : BaseActivity(), IFragmentRequest,
                                 TerminalParameterTable.updateTerminalDataInvoiceNumber("0")
 
                                 //Here we are incrementing sale batch number also for next sale:-
-                                TerminalParameterTable.updateSaleBatchNumber(
-                                    terminalParameterTable?.batchNumber ?: ""
-                                )
+                                val updatedBatchNumber =
+                                    terminalParameterTable?.batchNumber?.toInt()?.plus(1)
+                                TerminalParameterTable.updateSaleBatchNumber(updatedBatchNumber.toString())
+
                                 GlobalScope.launch(Dispatchers.Main) {
                                     alertBoxWithAction(
                                         null,

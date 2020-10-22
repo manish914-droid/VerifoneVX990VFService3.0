@@ -320,5 +320,7 @@
     <string name="fail">Fail :- </string>
     <string name="printing_roll_empty_msg">Please Check</string>
     <string name="please_check_printing_roll">Want To Settle without Settlement Reports?</string>
+    <string name="app_selection_failed">App Selection Failed</string>
+    <string name="please_reinitiate_transaction">Please Re-initiate Transaction.</string>
 
 </resources>

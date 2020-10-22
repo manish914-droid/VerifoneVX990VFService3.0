@@ -2089,11 +2089,10 @@ open class TerminalParameterTable() : RealmObject(), Parcelable {
         }
 
         fun updateSaleBatchNumber(batchNumber: String) = runBlocking {
-            var tpt: TerminalParameterTable? = null
             getRealm {
                 val tp = it.where(TerminalParameterTable::class.java).findFirst()
                 it.beginTransaction()
-                tp?.batchNumber = invoiceWithPadding(batchNumber) + 1
+                tp?.batchNumber = invoiceWithPadding(batchNumber)
                 it.commitTransaction()
             }.await()
         }
