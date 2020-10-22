@@ -34,8 +34,8 @@ import java.util.List;
 import static com.example.verifonevx990app.vxUtils.Converter.str2NibbleArr;
 
 public class DRLUtil {
-    private String cvmVal = "";
-    private String ctlsVal = "";
+    private String cvmVal = "";  // Min amount value for ctls trans
+    private String ctlsVal = ""; // Max amount value for ctls trans
 
     public DRLUtil(String cvmValueLimit, String ctlsMaxLimit) {
         this.cvmVal = cvmValueLimit;

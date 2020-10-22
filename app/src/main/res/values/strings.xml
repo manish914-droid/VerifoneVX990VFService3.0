@@ -133,7 +133,7 @@
     <string name="please_use_another_option">Please use another option for Transaction</string>
     <string name="app_selection">App Selection</string>
     <string name="confirm">Confirm</string>
-    <string name="pending_preauth_alert_msg">Want to get Pending Pre-Auth Details</string>
+    <string name="pending_preauth_alert_msg">Want To Get Pending Pre-Auth Details</string>
     <string name="enter_tip_amount">Enter TIP amount</string>
     <string name="enter_invoice">Enter Invoice</string>
     <string name="validate_and_go">Validate and go</string>
@@ -322,5 +322,7 @@
     <string name="please_check_printing_roll">Want To Settle without Settlement Reports?</string>
     <string name="app_selection_failed">App Selection Failed</string>
     <string name="please_reinitiate_transaction">Please Re-initiate Transaction.</string>
+    <string name="reversal_upload_fail">Reversal Upload Fail</string>
+
 
 </resources>

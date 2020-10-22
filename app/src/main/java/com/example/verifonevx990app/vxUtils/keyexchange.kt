@@ -396,7 +396,7 @@ class KeyExchanger(private val tid: String, private val callback: ApiCallback) :
         return stringBuilder.toString()
     }
 
-    fun startInit() {
+    private fun startInit() {
         GlobalScope.launch {
             HitServer.hitInitServer({ result, success ->
                 if (success) {
