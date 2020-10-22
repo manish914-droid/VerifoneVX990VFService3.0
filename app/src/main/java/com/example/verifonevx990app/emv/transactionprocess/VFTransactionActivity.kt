@@ -586,7 +586,20 @@ class VFTransactionActivity : BaseActivity() {
                         checkReversal(transactionISOByteArray, cardProcessedDataModal)
                     } else {
                         GlobalScope.launch(Dispatchers.Main) {
-                        //    VFService.showToast(transMsg)
+                            //  VFService.showToast(transMsg)
+                            alertBoxWithAction(null,
+                                null,
+                                getString(R.string.reversal_upload_fail),
+                                getString(R.string.transaction_delined_msg),
+                                false,
+                                getString(R.string.positive_button_ok),
+                                { alertPositiveCallback ->
+                                    if (alertPositiveCallback)
+                                        declinedTransaction()
+                                },
+                                {})
+
+
                         }
                     }
                 }

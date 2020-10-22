@@ -781,8 +781,6 @@ class VFEmvHandler(var activity: Activity,var handler: Handler, var iemv: IEMV?,
 
         }
     }
-
-
     //App Selection Rv
     private fun inflateAppsDialog(appList: MutableList<Bundle> , multiAppCB : (Int) -> Unit) {
         activity.runOnUiThread {
