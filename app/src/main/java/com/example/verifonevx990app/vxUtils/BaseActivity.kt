@@ -3,6 +3,7 @@ package com.example.verifonevx990app.vxUtils
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
@@ -16,6 +17,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.verifonevx990app.R
+import com.example.verifonevx990app.main.MainActivity
 import com.example.verifonevx990app.offlinemanualsale.OfflineSalePrintReceipt
 import com.example.verifonevx990app.realmtables.BatchFileDataTable
 import com.example.verifonevx990app.realmtables.EDashboardItem
@@ -161,6 +163,9 @@ abstract class BaseActivity : AppCompatActivity(), IDialog {
             Handler().postDelayed({
                 alert.dismiss()
                 alert.cancel()
+                startActivity(Intent(this, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                })
             }, 2000)
         }
 
