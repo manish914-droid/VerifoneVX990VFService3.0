@@ -38,7 +38,7 @@ enum class EOptionGroup {
 }
 
 enum class BankOptions(val _name: String, val group: EOptionGroup, val res: Int = 0) {
-    INITT("Init", EOptionGroup.FUNCTIONS, R.drawable.ic_init),
+    INITT("INIT", EOptionGroup.FUNCTIONS, R.drawable.ic_init),
     TPT("Terminal Param", EOptionGroup.FUNCTIONS, R.drawable.ic_tpt_img),
     CPT("Com Param", EOptionGroup.FUNCTIONS, R.drawable.ic_copt),
     ENV("ENV Param", EOptionGroup.FUNCTIONS, R.drawable.ic_env),

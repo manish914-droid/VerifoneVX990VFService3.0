@@ -48,6 +48,7 @@ import kotlinx.android.synthetic.main.app_toolbar.*
 import kotlinx.android.synthetic.main.main_drawer.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -398,7 +399,7 @@ class MainActivity : BaseActivity(), IFragmentRequest,
             if (tid?.length == 8) {
                 //toggleDrawer()
                 showProgress()
-                KeyExchanger(tid, ::onInitResponse).apply {
+                KeyExchanger(this@MainActivity, tid, ::onInitResponse).apply {
                     keWithInit = true
                 }.startExchange()
             }
@@ -406,7 +407,7 @@ class MainActivity : BaseActivity(), IFragmentRequest,
             if (tid?.length == 8) {
                 //toggleDrawer()
                 showProgress()
-                KeyExchanger(tid, ::onInitResponse).apply {
+                KeyExchanger(this@MainActivity, tid, ::onInitResponse).apply {
                     keWithInit = true
                 }.startExchange()
             }
@@ -537,7 +538,7 @@ class MainActivity : BaseActivity(), IFragmentRequest,
                 if (checkInternetConnection()) {
                     val tid = data as String
                     showProgress()
-                    KeyExchanger(tid, ::onInitResponse).apply {
+                    KeyExchanger(this@MainActivity, tid, ::onInitResponse).apply {
                         keWithInit = true
                     }.startExchange()
                 } else {
@@ -1109,9 +1110,9 @@ class MainActivity : BaseActivity(), IFragmentRequest,
                 val tpt = TerminalParameterTable.selectFromSchemeTable()
                 if (tpt != null) {
                     val tid = tpt.terminalId.toLong().toString()
-                    toggleDrawer()
+                    //toggleDrawer()
                     showProgress()
-                    KeyExchanger(tid, ::onInitResponse).apply {
+                    KeyExchanger(this@MainActivity, tid, ::onInitResponse).apply {
                         keWithInit = true
                     }.insertPPKDPKAfterSettlement()
                 }
@@ -1119,9 +1120,9 @@ class MainActivity : BaseActivity(), IFragmentRequest,
                 val tpt = TerminalParameterTable.selectFromSchemeTable()
                 if (tpt != null) {
                     val tid = tpt.terminalId.toLong().toString()
-                    toggleDrawer()
+                    //toggleDrawer()
                     showProgress()
-                    KeyExchanger(tid, ::onInitResponse).apply {
+                    KeyExchanger(this@MainActivity, tid, ::onInitResponse).apply {
                         keWithInit = true
                     }.startExchange()
                 }
@@ -1233,109 +1234,104 @@ class MainActivity : BaseActivity(), IFragmentRequest,
                                 TerminalParameterTable.updateSaleBatchNumber(updatedBatchNumber.toString())
 
                                 GlobalScope.launch(Dispatchers.Main) {
-                                    alertBoxWithAction(
-                                        null,
-                                        null,
-                                        getString(R.string.settlement_success),
-                                        getString(R.string.settlement_successfully_done),
-                                        false,
-                                        getString(R.string.positive_button_ok),
-                                        {
-                                            runOnUiThread {
-                                                if (!TextUtils.isEmpty(isAppUpdateAvailableData) && isAppUpdateAvailableData != "00" && isAppUpdateAvailableData != "01") {
-                                                    val dataList =
-                                                        isAppUpdateAvailableData?.split("|") as MutableList<String>
-                                                    if (dataList.size > 1) {
-                                                        onBackPressed()
-                                                        writeAppVersionNameInFile(this@MainActivity)
-                                                        when (dataList[0]) {
-                                                            AppUpdate.MANDATORY_APP_UPDATE.updateCode -> {
-                                                                if (terminalParameterTable?.reservedValues?.length == 20 &&
-                                                                    terminalParameterTable.reservedValues.endsWith(
-                                                                        "1"
-                                                                    )
+                                    txnSuccessToast(
+                                        this@MainActivity,
+                                        getString(R.string.settlement_success)
+                                    )
+                                    delay(2000)
+                                    if (!TextUtils.isEmpty(isAppUpdateAvailableData) && isAppUpdateAvailableData != "00" && isAppUpdateAvailableData != "01") {
+                                        val dataList =
+                                            isAppUpdateAvailableData?.split("|") as MutableList<String>
+                                        if (dataList.size > 1) {
+                                            onBackPressed()
+                                            writeAppVersionNameInFile(this@MainActivity)
+                                            when (dataList[0]) {
+                                                AppUpdate.MANDATORY_APP_UPDATE.updateCode -> {
+                                                    if (terminalParameterTable?.reservedValues?.length == 20 &&
+                                                        terminalParameterTable.reservedValues.endsWith(
+                                                            "1"
+                                                        )
+                                                    )
+                                                        startFTPAppUpdate(
+                                                            dataList[2],
+                                                            dataList[3].toInt(),
+                                                            dataList[4],
+                                                            dataList[5],
+                                                            dataList[7]
+                                                        )
+                                                    /*else
+                                                startHTTPSAppUpdate()*/ //------------>HTTPS App Update not in use currently
+                                                }
+                                                AppUpdate.OPTIONAL_APP_UPDATE.updateCode -> {
+                                                    alertBoxWithAction(
+                                                        null,
+                                                        null,
+                                                        getString(R.string.app_update),
+                                                        getString(R.string.app_update_available_do_you_want_to_update),
+                                                        true,
+                                                        getString(R.string.yes),
+                                                        {
+                                                            if (terminalParameterTable?.reservedValues?.length == 20 &&
+                                                                terminalParameterTable.reservedValues.endsWith(
+                                                                    "1"
                                                                 )
-                                                                    startFTPAppUpdate(
-                                                                        dataList[2],
-                                                                        dataList[3].toInt(),
-                                                                        dataList[4],
-                                                                        dataList[5],
-                                                                        dataList[7]
-                                                                    )
-                                                                /*else
-                                                            startHTTPSAppUpdate()*/ //------------>HTTPS App Update not in use currently
-                                                            }
-                                                            AppUpdate.OPTIONAL_APP_UPDATE.updateCode -> {
-                                                                alertBoxWithAction(
-                                                                    null,
-                                                                    null,
-                                                                    getString(R.string.app_update),
-                                                                    getString(R.string.app_update_available_do_you_want_to_update),
-                                                                    true,
-                                                                    getString(R.string.yes),
-                                                                    {
-                                                                        if (terminalParameterTable?.reservedValues?.length == 20 &&
-                                                                            terminalParameterTable.reservedValues.endsWith(
-                                                                                "1"
-                                                                            )
-                                                                        )
-                                                                            startFTPAppUpdate(
-                                                                                dataList[2],
-                                                                                dataList[3].toInt(),
-                                                                                dataList[4],
-                                                                                dataList[5],
-                                                                                dataList[7]
-                                                                            )
-                                                                        /*else
-                                                                startHTTPSAppUpdate()*/ //------------>HTTPS App Update not in use currently
-                                                                    },
-                                                                    {})
-                                                            }
-                                                            else -> {
-                                                                onBackPressed()
-                                                            }
-                                                        }
-                                                    } else {
-                                                        VFService.showToast(getString(R.string.something_went_wrong_in_app_update))
-                                                        onBackPressed()
-                                                    }
-                                                } else {
+                                                            )
+                                                                startFTPAppUpdate(
+                                                                    dataList[2],
+                                                                    dataList[3].toInt(),
+                                                                    dataList[4],
+                                                                    dataList[5],
+                                                                    dataList[7]
+                                                                )
+                                                            /*else
+                                                    startHTTPSAppUpdate()*/ //------------>HTTPS App Update not in use currently
+                                                        },
+                                                        {})
+                                                }
+                                                else -> {
                                                     onBackPressed()
-                                                    when (isAppUpdateAvailableData) {
-                                                        "00" -> {
-                                                            if (terminalParameterTable != null) {
-                                                                val tid =
-                                                                    terminalParameterTable.terminalId.toLong()
-                                                                        .toString()
-                                                                showProgress()
-                                                                KeyExchanger(
-                                                                    tid,
-                                                                    ::onInitResponse
-                                                                ).apply {
-                                                                    keWithInit = true
-                                                                }.insertPPKDPKAfterSettlement()
-                                                            }
-                                                        }
-
-                                                        "01" -> {
-                                                            if (terminalParameterTable != null) {
-                                                                val tid =
-                                                                    terminalParameterTable.terminalId.toLong()
-                                                                        .toString()
-                                                                showProgress()
-                                                                KeyExchanger(
-                                                                    tid,
-                                                                    ::onInitResponse
-                                                                ).apply {
-                                                                    keWithInit = true
-                                                                }.startExchange()
-                                                            }
-                                                        }
-                                                    }
                                                 }
                                             }
-                                        },
-                                        {})
+                                        } else {
+                                            VFService.showToast(getString(R.string.something_went_wrong_in_app_update))
+                                            onBackPressed()
+                                        }
+                                    } else {
+                                        onBackPressed()
+                                        when (isAppUpdateAvailableData) {
+                                            "00" -> {
+                                                if (terminalParameterTable != null) {
+                                                    val tid =
+                                                        terminalParameterTable.terminalId.toLong()
+                                                            .toString()
+                                                    showProgress()
+                                                    KeyExchanger(
+                                                        this@MainActivity,
+                                                        tid,
+                                                        ::onInitResponse
+                                                    ).apply {
+                                                        keWithInit = true
+                                                    }.insertPPKDPKAfterSettlement()
+                                                }
+                                            }
+
+                                            "01" -> {
+                                                if (terminalParameterTable != null) {
+                                                    val tid =
+                                                        terminalParameterTable.terminalId.toLong()
+                                                            .toString()
+                                                    showProgress()
+                                                    KeyExchanger(
+                                                        this@MainActivity,
+                                                        tid,
+                                                        ::onInitResponse
+                                                    ).apply {
+                                                        keWithInit = true
+                                                    }.startExchange()
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             } else {
                                 GlobalScope.launch(Dispatchers.Main) {
@@ -1365,110 +1361,106 @@ class MainActivity : BaseActivity(), IFragmentRequest,
                                         terminalParameterTable?.batchNumber ?: ""
                                     )
                                     GlobalScope.launch(Dispatchers.Main) {
-                                        alertBoxWithAction(
-                                            null,
-                                            null,
-                                            getString(R.string.settlement_success),
-                                            getString(R.string.settlement_successfully_done),
-                                            false,
-                                            getString(R.string.positive_button_ok),
-                                            {
-                                                runOnUiThread {
-                                                    if (!TextUtils.isEmpty(isAppUpdateAvailableData) && isAppUpdateAvailableData != "00" && isAppUpdateAvailableData != "01") {
-                                                        val dataList =
-                                                            isAppUpdateAvailableData?.split("|") as MutableList<String>
-                                                        if (dataList.size > 1) {
-                                                            onBackPressed()
-                                                            writeAppVersionNameInFile(this@MainActivity)
-                                                            when (dataList[0]) {
-                                                                AppUpdate.MANDATORY_APP_UPDATE.updateCode -> {
-                                                                    if (terminalParameterTable?.reservedValues?.length == 20 &&
-                                                                        terminalParameterTable.reservedValues.endsWith(
-                                                                            "1"
-                                                                        )
-                                                                    )
-                                                                        startFTPAppUpdate(
-                                                                            dataList[2],
-                                                                            dataList[3].toInt(),
-                                                                            dataList[4],
-                                                                            dataList[5],
-                                                                            dataList[7]
-                                                                        )
-                                                                    /*else
+                                        txnSuccessToast(
+                                            this@MainActivity,
+                                            getString(R.string.settlement_success)
+                                        )
+                                        delay(2000)
+                                        if (!TextUtils.isEmpty(isAppUpdateAvailableData) && isAppUpdateAvailableData != "00" && isAppUpdateAvailableData != "01") {
+                                            val dataList =
+                                                isAppUpdateAvailableData?.split("|") as MutableList<String>
+                                            if (dataList.size > 1) {
+                                                onBackPressed()
+                                                writeAppVersionNameInFile(this@MainActivity)
+                                                when (dataList[0]) {
+                                                    AppUpdate.MANDATORY_APP_UPDATE.updateCode -> {
+                                                        if (terminalParameterTable?.reservedValues?.length == 20 &&
+                                                            terminalParameterTable.reservedValues.endsWith(
+                                                                "1"
+                                                            )
+                                                        )
+                                                            startFTPAppUpdate(
+                                                                dataList[2],
+                                                                dataList[3].toInt(),
+                                                                dataList[4],
+                                                                dataList[5],
+                                                                dataList[7]
+                                                            )
+                                                        /*else
                                                                 startHTTPSAppUpdate()*/ //------------>HTTPS App Update not in use currently
-                                                                }
-                                                                AppUpdate.OPTIONAL_APP_UPDATE.updateCode -> {
-                                                                    alertBoxWithAction(
-                                                                        null,
-                                                                        null,
-                                                                        getString(R.string.app_update),
-                                                                        getString(R.string.app_update_available_do_you_want_to_update),
-                                                                        true,
-                                                                        getString(R.string.yes),
-                                                                        {
-                                                                            if (terminalParameterTable?.reservedValues?.length == 20 &&
-                                                                                terminalParameterTable.reservedValues.endsWith(
-                                                                                    "1"
-                                                                                )
-                                                                            )
-                                                                                startFTPAppUpdate(
-                                                                                    dataList[2],
-                                                                                    dataList[3].toInt(),
-                                                                                    dataList[4],
-                                                                                    dataList[5],
-                                                                                    dataList[7]
-                                                                                )
-                                                                            /*else
+                                                    }
+                                                    AppUpdate.OPTIONAL_APP_UPDATE.updateCode -> {
+                                                        alertBoxWithAction(
+                                                            null,
+                                                            null,
+                                                            getString(R.string.app_update),
+                                                            getString(R.string.app_update_available_do_you_want_to_update),
+                                                            true,
+                                                            getString(R.string.yes),
+                                                            {
+                                                                if (terminalParameterTable?.reservedValues?.length == 20 &&
+                                                                    terminalParameterTable.reservedValues.endsWith(
+                                                                        "1"
+                                                                    )
+                                                                )
+                                                                    startFTPAppUpdate(
+                                                                        dataList[2],
+                                                                        dataList[3].toInt(),
+                                                                        dataList[4],
+                                                                        dataList[5],
+                                                                        dataList[7]
+                                                                    )
+                                                                /*else
                                                                     startHTTPSAppUpdate()*/ //------------>HTTPS App Update not in use currently
-                                                                        },
-                                                                        {})
-                                                                }
-                                                                else -> {
-                                                                    onBackPressed()
-                                                                }
-                                                            }
-                                                        } else {
-                                                            VFService.showToast(getString(R.string.something_went_wrong_in_app_update))
-                                                            onBackPressed()
-                                                        }
-                                                    } else {
+                                                            },
+                                                            {})
+                                                    }
+                                                    else -> {
                                                         onBackPressed()
-                                                        when (isAppUpdateAvailableData) {
-                                                            "00" -> {
-                                                                if (terminalParameterTable != null) {
-                                                                    val tid =
-                                                                        terminalParameterTable.terminalId.toLong()
-                                                                            .toString()
-                                                                    showProgress()
-                                                                    KeyExchanger(
-                                                                        tid,
-                                                                        ::onInitResponse
-                                                                    ).apply {
-                                                                        keWithInit = true
-                                                                    }.insertPPKDPKAfterSettlement()
-                                                                }
-                                                            }
-
-                                                            "01" -> {
-                                                                if (terminalParameterTable != null) {
-                                                                    val tid =
-                                                                        terminalParameterTable.terminalId.toLong()
-                                                                            .toString()
-                                                                    showProgress()
-                                                                    KeyExchanger(
-                                                                        tid,
-                                                                        ::onInitResponse
-                                                                    ).apply {
-                                                                        keWithInit = true
-                                                                    }.startExchange()
-                                                                }
-                                                            }
-                                                        }
                                                     }
                                                 }
-                                            },
-                                            {})
+                                            } else {
+                                                VFService.showToast(getString(R.string.something_went_wrong_in_app_update))
+                                                onBackPressed()
+                                            }
+                                        } else {
+                                            onBackPressed()
+                                            when (isAppUpdateAvailableData) {
+                                                "00" -> {
+                                                    if (terminalParameterTable != null) {
+                                                        val tid =
+                                                            terminalParameterTable.terminalId.toLong()
+                                                                .toString()
+                                                        showProgress()
+                                                        KeyExchanger(
+                                                            this@MainActivity,
+                                                            tid,
+                                                            ::onInitResponse
+                                                        ).apply {
+                                                            keWithInit = true
+                                                        }.insertPPKDPKAfterSettlement()
+                                                    }
+                                                }
+
+                                                "01" -> {
+                                                    if (terminalParameterTable != null) {
+                                                        val tid =
+                                                            terminalParameterTable.terminalId.toLong()
+                                                                .toString()
+                                                        showProgress()
+                                                        KeyExchanger(
+                                                            this@MainActivity,
+                                                            tid,
+                                                            ::onInitResponse
+                                                        ).apply {
+                                                            keWithInit = true
+                                                        }.startExchange()
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
+
                                 }
                                 VFService.showToast(getString(R.string.printing_error))
                             }

@@ -1,8 +1,10 @@
 package com.example.verifonevx990app.vxUtils
 
+import android.content.Context
 import android.util.Log
 import com.example.verifonevx990app.BuildConfig
 import com.example.verifonevx990app.R
+import com.example.verifonevx990app.main.MainActivity
 import com.example.verifonevx990app.main.PrefConstant
 import com.example.verifonevx990app.main.setAutoSettlement
 import com.example.verifonevx990app.realmtables.TerminalParameterTable
@@ -57,16 +59,22 @@ interface IAppUpdateConfirmationPacketExchange {
  * */
 typealias ApiCallback = (String, Boolean, Boolean) -> Unit
 
-class KeyExchanger(private val tid: String, private val callback: ApiCallback) : IKeyExchange {
+class KeyExchanger(
+    private var context: Context,
+    private val tid: String,
+    private val callback: ApiCallback
+) : IKeyExchange {
 
     var keWithInit = true
     var isHdfc = false
+
     companion object {
         private val TAG = KeyExchanger::class.java.simpleName
 
         fun getF61(): String {
             //region=========adding field 61=============
-            val appName = addPad(VerifoneApp.appContext.getString(R.string.app_name), " ", 10, false)
+            val appName =
+                addPad(VerifoneApp.appContext.getString(R.string.app_name), " ", 10, false)
 
             //val deviceModel = VerifoneApp.getDeviceModel()
             //Getting Device Modal from VF Service AIDL:-
@@ -85,7 +93,12 @@ class KeyExchanger(private val tid: String, private val callback: ApiCallback) :
     private var tmkKcv:ByteArray = byteArrayOf()
     private lateinit var rsa: Map<String, Any>
 
-    private fun backToCalled(msg: String, success: Boolean, isProgressType: Boolean) {
+    private fun backToCalled(
+        msg: String,
+        success: Boolean,
+        isProgressType: Boolean,
+        isDismiss: Boolean = false
+    ) {
         logger(TAG, "msg = $msg, success = $success, isProgressType = $isProgressType")
         GlobalScope.launch(Dispatchers.Main) {
             callback(msg, success, isProgressType)
@@ -261,7 +274,17 @@ class KeyExchanger(private val tid: String, private val callback: ApiCallback) :
                                             PrefConstant.INSERT_PPK_DPK.keyName.toString(),
                                             false
                                         )
-                                        backToCalled("Logon successfull", it, false)
+                                        (context as MainActivity).hideProgress()
+                                        GlobalScope.launch(Dispatchers.Main) {
+                                            (context as MainActivity).alertBoxWithAction(null,
+                                                null, "",
+                                                context.getString(R.string.logon_successfull),
+                                                false,
+                                                "",
+                                                {},
+                                                {})
+                                        }
+                                        //backToCalled("Logon successfull", it, false)
                                     } else {
                                         launch { AppPreference.saveLogin(false) }
                                         AppPreference.saveBoolean(
@@ -404,15 +427,32 @@ class KeyExchanger(private val tid: String, private val callback: ApiCallback) :
                         setAutoSettlement()  // Setting auto settlement.
                         downloadPromo()  // Setting
                     }
-
-                    backToCalled(result, success, false)
+                    (context as MainActivity).hideProgress()
+                    GlobalScope.launch(Dispatchers.Main) {
+                        (context as MainActivity).alertBoxWithAction(null,
+                            null,
+                            "",
+                            context.getString(R.string.successfull_init),
+                            false,
+                            "",
+                            {},
+                            {})
+                    }
                     VFService.vfBeeper?.startBeep(200)
-                    AppPreference.saveBoolean(PrefConstant.INIT_AFTER_SETTLEMENT.keyName.toString() , false)
+                    AppPreference.saveBoolean(
+                        PrefConstant.INIT_AFTER_SETTLEMENT.keyName.toString(),
+                        false
+                    )
                     val tpt = TerminalParameterTable.selectFromSchemeTable()
-                    VFService.setAidRid(addPad(tpt?.minCtlsTransAmt?:"" , "0" , 12 , true) ,
-                        addPad(tpt?.maxCtlsTransAmt?:"" , "0" , 12 , true))
+                    VFService.setAidRid(
+                        addPad(tpt?.minCtlsTransAmt ?: "", "0", 12, true),
+                        addPad(tpt?.maxCtlsTransAmt ?: "", "0", 12, true)
+                    )
                 } else {
-                    AppPreference.saveBoolean(PrefConstant.INIT_AFTER_SETTLEMENT.keyName.toString() , true)
+                    AppPreference.saveBoolean(
+                        PrefConstant.INIT_AFTER_SETTLEMENT.keyName.toString(),
+                        true
+                    )
                     backToCalled(result, false, false)
                 }
             }, {

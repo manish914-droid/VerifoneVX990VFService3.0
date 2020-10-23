@@ -323,6 +323,10 @@
     <string name="app_selection_failed">App Selection Failed</string>
     <string name="please_reinitiate_transaction">Please Re-initiate Transaction.</string>
     <string name="reversal_upload_fail">Reversal Upload Fail</string>
+    <string name="logon">Logon</string>
+    <string name="logon_successfull">Logon Successfull</string>
+    <string name="capital_init">INIT</string>
+    <string name="successfull_init">Successfull INIT</string>
 
 
 </resources>

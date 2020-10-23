@@ -44,7 +44,7 @@ class VFEmvHandler(var activity: Activity,var handler: Handler, var iemv: IEMV?,
 
     override fun onRequestOnlineProcess(aaResult: Bundle?) {
         Log.d(MainActivity.TAG, "onRequestOnlineProcess...")
-        //Setting Pos entry mode for thosse who didnt got in RequestInputpin
+        //Setting Pos entry mode for those who did not got in Request Input Pin
 
         when (cardProcessedDataModal.getReadCardType()) {
             DetectCardType.EMV_CARD_TYPE -> {

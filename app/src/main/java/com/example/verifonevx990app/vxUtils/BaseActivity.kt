@@ -4,6 +4,8 @@ package com.example.verifonevx990app.vxUtils
 import android.app.Activity
 import android.app.Dialog
 import android.os.Bundle
+import android.os.Handler
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import android.view.Window
@@ -135,6 +137,7 @@ abstract class BaseActivity : AppCompatActivity(), IDialog {
         positiveButtonText: String, alertCallback: (Boolean) -> Unit,
         cancelButtonCallback: (Boolean) -> Unit
     ) {
+
         val builder = androidx.appcompat.app.AlertDialog.Builder(this)
         builder.setTitle(title)
         builder.setMessage(msg)
@@ -144,6 +147,8 @@ abstract class BaseActivity : AppCompatActivity(), IDialog {
                 alertCallback(true)
             }
 
+
+        //Below condition check is to show Cancel Button in Alert Dialog on condition base:-
         if (showCancelButton) {
             builder.setNegativeButton("No") { dialog, _ ->
                 dialog.cancel()
@@ -151,15 +156,21 @@ abstract class BaseActivity : AppCompatActivity(), IDialog {
             }
         }
         val alert: androidx.appcompat.app.AlertDialog = builder.create()
+        //Below Handler will execute to auto cancel Alert Dialog Pop-Up when positiveButtonText isEmpty:-
+        if (TextUtils.isEmpty(positiveButtonText)) {
+            Handler().postDelayed({
+                alert.dismiss()
+                alert.cancel()
+            }, 2000)
+        }
+
         try {
-            if(!alert.isShowing) {
+            if (!alert.isShowing) {
                 alert.show()
             }
-        }
-        catch (ex: WindowManager.BadTokenException) {
+        } catch (ex: WindowManager.BadTokenException) {
             ex.printStackTrace()
-        }
-        catch (ex: Exception) {
+        } catch (ex: Exception) {
             ex.printStackTrace()
         }
     }
