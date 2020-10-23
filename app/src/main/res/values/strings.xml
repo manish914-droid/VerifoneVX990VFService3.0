@@ -324,9 +324,11 @@
     <string name="please_reinitiate_transaction">Please Re-initiate Transaction.</string>
     <string name="reversal_upload_fail">Reversal Upload Fail</string>
     <string name="logon">Logon</string>
-    <string name="logon_successfull">Logon Successfull</string>
+    <string name="logon_successfull">Logon Successful</string>
     <string name="capital_init">INIT</string>
-    <string name="successfull_init">Successfull INIT</string>
+    <string name="successfull_init">INIT Successful</string>
+    <string name="timeOut">Timeout</string>
+    <string name="transaction_terminated">Transaction terminated</string>
 
 
 </resources>

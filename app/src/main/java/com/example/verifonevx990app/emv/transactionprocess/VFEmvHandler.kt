@@ -510,6 +510,21 @@ class VFEmvHandler(var activity: Activity,var handler: Handler, var iemv: IEMV?,
                 }
                 logger("onTransactionResult", "IncorrectPAN", "e")
             }
+            DetectError.OtherErrorTransactionterminated.errorCode == result -> {
+                (activity as VFTransactionActivity).handleEMVFallbackFromError(
+                    activity.getString(R.string.timeOut),
+                    activity.getString(R.string.transaction_terminated),
+                    false
+                ) { alertCBBool ->
+                    if (alertCBBool)
+                        try {
+                            (activity as VFTransactionActivity).declinedTransaction()
+                        } catch (ex: Exception) {
+                            ex.printStackTrace()
+                        }
+                }
+                logger("onTransactionResult", "IncorrectPAN", "e")
+            }
             else -> {
                 (activity as VFTransactionActivity).handleEMVFallbackFromError(
                     activity.getString(R.string.alert), msg.toString(),

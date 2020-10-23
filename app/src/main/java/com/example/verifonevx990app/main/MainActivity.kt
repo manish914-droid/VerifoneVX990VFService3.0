@@ -1582,6 +1582,7 @@ enum class DetectError(val errorCode: Int) {
     ReadCardFail(24),
     Muticarderror(26),
     IncorrectPAN(2007),
+    OtherErrorTransactionterminated(11),
     CTLS_CARD_READ_FAILED_ERROR(29),
 }
 
