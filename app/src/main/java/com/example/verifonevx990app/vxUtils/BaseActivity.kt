@@ -296,7 +296,11 @@ sealed class VxEvent {
     data class ChangeTitle(val titleName: String) : VxEvent()
     data class ReplaceFragment(val fragment: Fragment) : VxEvent()
     object AutoSettle : VxEvent()
-    data class PayEmi(val amount: Float, val issuerId: String, val tenure: TenureDataModel) :
+    data class PayEmi(
+        val amount: Float,
+        val issuerId: String,
+        val tenure: TenureDataModel
+    ) :
         VxEvent()
     data class Emi(val amt: Double, val type: EDashboardItem) : VxEvent()
     object ForceSettle : VxEvent()

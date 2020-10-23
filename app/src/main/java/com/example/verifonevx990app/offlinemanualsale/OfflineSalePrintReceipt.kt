@@ -208,10 +208,7 @@ class OfflineSalePrintReceipt {
 
                 when (copyType) {
                     EPrintCopyType.MERCHANT -> {
-                        txnSuccessToast(
-                            context,
-                            context.getString(R.string.offline_transaction_approved)
-                        )
+                        txnSuccessToast(context, context.getString(R.string.offline_transaction_approved))
                         GlobalScope.launch(Dispatchers.Main) {
                             delay(1000)
                             (context as BaseActivity).showMerchantAlertBoxOfflineSale(batch) { dialogCB ->

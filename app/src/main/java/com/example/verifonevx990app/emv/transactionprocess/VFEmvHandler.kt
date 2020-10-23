@@ -539,15 +539,7 @@ class VFEmvHandler(var activity: Activity,var handler: Handler, var iemv: IEMV?,
                            if (alertCBBool) {
                                try {
                                    cardProcessedDataModal.setFallbackType(EFallbackCode.EMV_fallback.fallBackCode)
-                                   vfEmvHandlerCallback(cardProcessedDataModal)
-                               } catch (ex: Exception) {
-                                   ex.printStackTrace()
-                               }
-                           }
-                       }
-                   }
-               }
-
+                                   vfEmvHandlerCallback(cardProcessedDao
                DetectCardType.CONTACT_LESS_CARD_TYPE -> {
 
                }

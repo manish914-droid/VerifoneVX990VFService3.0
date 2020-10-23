@@ -214,15 +214,27 @@ class EmiActivity : BaseActivity(), IBenefitTable, View.OnClickListener {
     }
 
     private fun nextBankEmi() {
-        val frag = pagerAdapter.list[mCurrentFragment]
-        val idm = frag.issuerDataModel
-        val tdm = frag.getSelectedTenure()
+        try {
 
-        when {
-            idm == null -> showToast("Issuer Error. Please init again")
-            tdm == null -> showToast("Please select the tenure")
-            else -> onEvents(VxEvent.PayEmi(mAmount.toFloat(), idm.issuerId, tdm))
+            val frag = pagerAdapter.list[mCurrentFragment]
+            val idm = frag.issuerDataModel
+            val tdm = frag.getSelectedTenure()
+            when {
+                idm == null -> showToast("Issuer Error. Please init again")
+                tdm == null -> showToast("Please select the tenure")
+                else -> {
+                    if(tdm.isChecked)
+                        onEvents(VxEvent.PayEmi(mAmount.toFloat(), idm.issuerId, tdm))
+                    else{
+                        showToast("Please select the tenure")
+                    }
+                }
+            }
         }
+
+    catch (ex: Exception){
+        ex.printStackTrace()
+    }
 
     }
 

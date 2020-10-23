@@ -7,7 +7,7 @@ apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 29
-/*    signingConfigs {
+    signingConfigs {
         release {
             storeFile file('/home/manishkumar/Documents/app_release_keys/bonus.jks')
             storePassword 'Bonus@123'
@@ -29,14 +29,14 @@ android {
 
         }
 
-    }*/
+    }
     defaultConfig {
         applicationId "com.example.verifonevx990app"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         buildConfigField "long", "TIMESTAMP", System.currentTimeMillis() + "L"
-        buildConfigField "long", "REVISION_ID", "201021"
+        buildConfigField "long", "REVISION_ID", "201022"
         versionName "01.01.10"
         multiDexEnabled true
 

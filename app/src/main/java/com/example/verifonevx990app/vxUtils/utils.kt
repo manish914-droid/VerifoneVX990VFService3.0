@@ -1413,8 +1413,8 @@ private fun navigateToMain(context: Context) {
 
 fun txnSuccessToast(context: Context,msg: String="Transaction Approved"){
     try {
-        VFService.vfBeeper?.startBeep(200)
         GlobalScope.launch(Dispatchers.Main) {
+            VFService.vfBeeper?.startBeep(200)
             val layout = (context as Activity).layoutInflater.inflate(
                 R.layout.success_toast,
                 context.custom_toast_layout)
@@ -1428,6 +1428,7 @@ fun txnSuccessToast(context: Context,msg: String="Transaction Approved"){
     }
     catch (ex:java.lang.Exception){
         VFService.showToast(context.getString(R.string.transaction_approved_successfully))
+        VFService.connectToVFService(context)
     }
 }
 
