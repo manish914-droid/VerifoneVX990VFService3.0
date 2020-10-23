@@ -502,7 +502,9 @@ SubMenuFragment : Fragment(), IOnSubMenuItemSelectListener {
                                             false,
                                             "OK", {
                                             }, {
-
+                                                // Added by MKK for automatic FBatch value zero in case of Clear Batch
+                                                AppPreference.saveBoolean(PrefConstant.SERVER_HIT_STATUS.keyName.toString(), false)
+                                                //
                                             }
                                         )
                                     }
