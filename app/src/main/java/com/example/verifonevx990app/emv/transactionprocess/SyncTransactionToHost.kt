@@ -69,7 +69,10 @@ class SyncTransactionToHost(var transactionISOByteArray: IsoDataWriter?, var car
                                             DetectCardType.EMV_CARD_TYPE -> {
                                                 val reversalPacket =
                                                     Gson().toJson(transactionISOData)
-                                                AppPreference.saveString(GENERIC_REVERSAL_KEY, reversalPacket)
+                                                AppPreference.saveString(
+                                                    GENERIC_REVERSAL_KEY,
+                                                    reversalPacket
+                                                )
                                             }
 
                                             else -> {
@@ -84,11 +87,12 @@ class SyncTransactionToHost(var transactionISOByteArray: IsoDataWriter?, var car
                                     val responseIsoData: IsoDataReader = readIso(result, false)
                                 } catch (ex: Exception) {
                                     ex.printStackTrace()
-                                 //   syncTransactionCallback(false, "", result, null)
+                                    //   syncTransactionCallback(false, "", result, null)
                                 }
 
                                 //   println("Number format problem")
-                                val responseIsoData: IsoDataReader = readIso(result.toString(), false)
+                                val responseIsoData: IsoDataReader =
+                                    readIso(result.toString(), false)
                                 logger("Transaction RESPONSE ", "---", "e")
                                 logger("Transaction RESPONSE --->>", responseIsoData.isoMap, "e")
                                 Log.e("Success 39-->  ", responseIsoData.isoMap[39]?.parseRaw2String().toString() + "---->" + responseIsoData.isoMap[58]?.parseRaw2String().toString())

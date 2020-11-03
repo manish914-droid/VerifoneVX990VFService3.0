@@ -41,7 +41,6 @@ class VFEmvHandler(var activity: Activity,var handler: Handler, var iemv: IEMV?,
     private var savedPan: String? = null
     private var tagOfF55: SparseArray<String>? = null
 
-
     override fun onRequestOnlineProcess(aaResult: Bundle?) {
         Log.d(MainActivity.TAG, "onRequestOnlineProcess...")
         //Setting Pos entry mode for those who did not got in Request Input Pin

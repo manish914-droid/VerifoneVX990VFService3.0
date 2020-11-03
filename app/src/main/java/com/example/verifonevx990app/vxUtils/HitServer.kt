@@ -127,18 +127,37 @@ object HitServer {
                     //println("Read Time out error"+ex.message)
                     callbackSale(responseStr ?: "", true, ConnectionError.ReadTimeout.errorCode.toString())
                     this@HitServer.callback = null
+                    return@openSocketSale
                 } catch (ex: ConnectException) {
                     println("Read Time out error2" + ex.message)
-                    callbackSale(ex.message ?: "Connection Error", true, ConnectionError.ReadTimeout.errorCode.toString())
+                    callbackSale(
+                        ex.message ?: "Connection Error",
+                        true,
+                        ConnectionError.ReadTimeout.errorCode.toString()
+                    )
                     //println("Read Time out error2"+ex.message)
+                    this@HitServer.callback = null
+                    return@openSocketSale
                 } catch (ex: SocketException) {
                     println("Read Time out error3" + ex.message)
-                    callbackSale(ex.message ?: "Connection Error", true, ConnectionError.ReadTimeout.errorCode.toString())
+                    callbackSale(
+                        ex.message ?: "Connection Error",
+                        true,
+                        ConnectionError.ReadTimeout.errorCode.toString()
+                    )
                     //println("Read Time out error2"+ex.message)
+                    this@HitServer.callback = null
+                    return@openSocketSale
                 }
-                catch (ex : Exception){
-                    println("Read Time out error4"+ex.message)
-                    callbackSale(ex.message ?: "Connection Error", true,ConnectionError.ReadTimeout.errorCode.toString())
+                catch (ex : Exception) {
+                    println("Read Time out error4" + ex.message)
+                    callbackSale(
+                        ex.message ?: "Connection Error",
+                        true,
+                        ConnectionError.ReadTimeout.errorCode.toString()
+                    )
+                    this@HitServer.callback = null
+                    return@openSocketSale
                     //println("Read Time out error3"+ex.message)
                 }
                 println("Outside the Readtimeout error5")
