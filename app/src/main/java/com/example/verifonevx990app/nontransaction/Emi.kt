@@ -160,16 +160,62 @@ class EmiActivity : BaseActivity(), IBenefitTable, View.OnClickListener {
             }
 
             launch(Dispatchers.Main) {
-                pagerAdapter = EmiPagerAdapter(
-                    supportFragmentManager, if (isBankEmi) mListFragment else arrayListOf(),
-                    if (isBankEmi) mListTitle else arrayListOf()
-                )
+                pagerAdapter = EmiPagerAdapter(supportFragmentManager, if (isBankEmi) mListFragment else arrayListOf(), if (isBankEmi) mListTitle else arrayListOf())
                 emi_frag_vp.adapter = pagerAdapter
                 pagerAdapter.notifyDataSetChanged()
 
                 if (!isBankEmi) {
                     openBankList()
                 }
+                else{
+                    val emiSchemeGroupTable: List<EmiSchemeGroupTable> by lazy { EmiSchemeGroupTable.selectFromEmiSchemeGroupProductTable() }
+                    val emiSchemeTableSet = mutableSetOf<String>()
+
+                    var int: Int= 0
+                    var emischemeid = ArrayList<String>()
+                    for (e in emiSchemeGroupTable) {
+                        if(e.isActive == "1" && e.emischemeIds.contains(","))
+                            emischemeid = e.emischemeIds.split(",") as ArrayList<String>
+                        else if(e.isActive =="1"){
+                            for (j in emiSchemeTable) {  //114 for EmiSchemeTable
+                                val currDt =  getCurrentDate()
+                                if(currDt.compareTo(j.startDate) >= 0 && currDt.compareTo(j.endDate) <= 0  && mAmount <= j.maxValue.toDouble() / 100 && mAmount >= j.minValue.toDouble() / 100) {
+                                    if (j.isActive == "1" && e.isActive == "1" && j.emiSchemeId == e.emischemeIds) {
+                                        emiSchemeTableSet.add(j.schemeId)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    for (e in emischemeid.iterator()) {
+                        for (j in emiSchemeTable) {
+                            val currDt =  getCurrentDate()
+                            if(currDt.compareTo(j.startDate) >= 0 && currDt.compareTo(j.endDate) <= 0 && mAmount <= j.maxValue.toDouble() / 100 && mAmount >= j.minValue.toDouble() / 100) {
+                                if (j.isActive == "1" && j.emiSchemeId == emischemeid.get(int)) {
+                                    emiSchemeTableSet.add(j.schemeId)
+                                }
+                            }
+                        }
+                        int++
+
+                    }
+
+                    alertBoxWithAction(null, null,
+                            getString(R.string.emis),
+                            getString(R.string.no_emi),
+                            false,
+                            getString(R.string.positive_button_ok),
+                            { alertPositiveCallback ->
+                                if (alertPositiveCallback) {
+                                    startActivity(Intent(this@EmiActivity, MainActivity::class.java).apply {
+                                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    })
+                                }
+                            },
+                            {})
+
+                }
+
 
             }
 
@@ -805,10 +851,7 @@ class EmiDetailFragment : Fragment() {
     private val mAmount: Double by lazy { arguments?.getDouble("amount", 0.0) ?: 0.0 }
 
     private val mSchemeAdpater: SchemeAdapter by lazy {
-        SchemeAdapter(
-            mEmiViewList,
-            mAmount.toFloat()
-        )
+        SchemeAdapter(mEmiViewList, mAmount.toFloat())
     }
 
     private val emiSchemeTable: List<EmiSchemeTable> by lazy { EmiSchemeTable.selectFromEmiSchemeTable() }

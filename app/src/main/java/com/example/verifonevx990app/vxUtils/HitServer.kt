@@ -41,7 +41,7 @@ object HitServer {
             logger("Connection Details:- ", VFService.getIpPort().toString(), "d")
                 var responseStr : String? = null
             openSocket { socket ->
-                try {
+            //    try {
                     irh?.saveReversal()
                     logger(TAG, "address = ${socket.inetAddress}, port = ${socket.port}", "e")
                     ConnectionTimeStamps.dialConnected = getF48TimeStamp()
@@ -65,11 +65,11 @@ object HitServer {
 
                     socket.close()
                     irh?.clearReversal()
-                }
-                catch (ex: Exception) {
-                    ex.printStackTrace()
-                    callback(responseStr ?: "", true)
-                }
+            //    }
+        //        catch (ex: Exception) {
+           //         ex.printStackTrace()
+             //       callback(responseStr ?: "", true)
+            //    }
                 callback(responseStr ?: "", true)
                     this@HitServer.callback = null
              }

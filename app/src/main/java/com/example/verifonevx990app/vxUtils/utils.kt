@@ -751,8 +751,14 @@ object ROCProviderV2 {
     fun getEncryptedTrackData(track2Data: String?): String? {
         var encryptedbyteArrrays: ByteArray? = null
         if (null != track2Data) {
-            val track21 = "35|" + track2Data.replace("D", "=").replace("F", "")
+            var track21 = "35|" + track2Data.replace("D", "=").replace("F", "")
             //println("Track 2 data is$track21")
+            val DIGIT_8 = 8
+
+            val mod = track21.length % DIGIT_8
+            if (mod!=0) {
+                track21 = getEncryptedField57DataForVisa(track21.length,track21)
+            }
 
             val byteArray = track21.toByteArray(StandardCharsets.ISO_8859_1)
             encryptedbyteArrrays = VFService.vfPinPad?.encryptTrackData(0, 2, byteArray)
@@ -1054,6 +1060,25 @@ fun getEncryptedField57DataForManualSale(panNumber: String, expDate: String): St
         return Utility.byte2HexStr(encryptedByteArray)
     } else return "TRACK57_LENGTH<8"
 
+}
+
+fun getEncryptedField57DataForVisa(dataLength: Int,dataDescription: String): String{
+    var dataDescription = dataDescription
+    val encryptedByteArray: ByteArray?
+    val DIGIT_8 = 8
+    if (dataLength > DIGIT_8) {
+        val mod = dataLength % DIGIT_8
+        if (mod!=0) {
+            val padding = DIGIT_8 - mod
+            val totalLength = dataLength + padding
+            dataDescription = addPad(dataDescription, " ", totalLength, false)
+        }
+        //     logger("Field57_Visa", " -->$dataDescription", "e")
+        //      val byteArray = dataDescription.toByteArray(StandardCharsets.ISO_8859_1)
+        //     encryptedByteArray = VFService.vfPinPad?.encryptTrackData(0, 2, byteArray)
+        //    println("Track 2 with encryption in Visa sale is --->" + Utility.byte2HexStr(encryptedByteArray))
+        return dataDescription/*Utility.byte2HexStr(encryptedByteArray)*/
+    } else return "TRACK57_LENGTH<8"
 }
 
 fun getEncryptedField57DataForOfflineSale(

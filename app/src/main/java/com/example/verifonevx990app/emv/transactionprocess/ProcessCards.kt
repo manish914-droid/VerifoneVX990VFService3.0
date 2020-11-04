@@ -112,10 +112,7 @@ class ProcessCard(var activity: Activity, var handler: Handler, var cardProcesse
                                 cardProcessedDataModal.setReadCardType(DetectCardType.MAG_CARD_TYPE)
                                 if (track2 != null) {
                                     cardProcessedDataModal.setTrack2Data(
-                                        getEncryptedTrackData(
-                                            track2
-                                        ).toString()
-                                    )
+                                        getEncryptedTrackData(track2).toString())
                                 }
                                 if (track1 != null) {
                                     cardProcessedDataModal.setTrack1Data(track1)

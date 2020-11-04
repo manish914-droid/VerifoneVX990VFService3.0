@@ -296,8 +296,14 @@ class VFEmvHandler(var activity: Activity,var handler: Handler, var iemv: IEMV?,
                     onTransactionResult(DetectError.IncorrectPAN.errorCode,bun)
                 }
                 else {
-                    val track21 = "35|" + track2.replace("D", "=").replace("F", "")
+                    var track21 = "35|" + track2.replace("D", "=").replace("F", "")
                     //println("Track 2 data is$track21")
+                    val DIGIT_8 = 8
+
+                    val mod = track21.length % DIGIT_8
+                    if (mod!=0) {
+                        track21 = getEncryptedField57DataForVisa(track21.length,track21)
+                    }
                     val byteArray = track21.toByteArray(StandardCharsets.ISO_8859_1)
                     val encryptedTrack2ByteArray: ByteArray? =
                         VFService.vfPinPad?.encryptTrackData(0, 2, byteArray)
