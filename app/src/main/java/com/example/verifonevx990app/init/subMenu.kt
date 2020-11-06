@@ -32,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.collections.ArrayList
 
 enum class EOptionGroup {
     FUNCTIONS, REPORT, NONE
@@ -302,15 +303,18 @@ class TableEditFragment : Fragment() {
                         "Invoice Number",
                         "Clear FBatch"
                     )
-                    val tempList = arrayListOf<TableEditHelper>()
-                    for (dList in dataList) {
-                        for (rFields in requiredField) {
-                            if (dList.titleName == rFields) {
-                                tempList.add(dList)
-                            }
-                        }
+                    /* for (dList in dataList) {
+                         for (rFields in requiredField) {
+                             if (dList.titleName == rFields) {
+                                 tempList.add(dList)
+                             }
+                         }
 
-                    }
+                     }
+                     dataList.clear()
+                     dataList.addAll(tempList)*/
+                    var tempList =
+                        dataList.filter { m -> requiredField.any { it == m.titleName } } as ArrayList<TableEditHelper>
                     dataList.clear()
                     dataList.addAll(tempList)
                 }
