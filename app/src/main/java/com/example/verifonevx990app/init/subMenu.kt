@@ -139,10 +139,20 @@ class TableEditFragment : Fragment() {
 
                 //Below conditional code will only execute in case of cLEAR FBATCH :-
                 if (data[0].titleName.equals("CLEAR FBATCH", ignoreCase = true)) {
-                    if (data[0].titleValue == "0" && data[0].titleName.equals("CLEAR FBATCH", ignoreCase = true)) {
-                        AppPreference.saveBoolean(PrefConstant.SERVER_HIT_STATUS.keyName.toString(), false)
+                    if (data[0].titleValue == "0" && data[0].titleName.equals(
+                            "CLEAR FBATCH",
+                            ignoreCase = true
+                        )
+                    ) {
+                        AppPreference.saveBoolean(
+                            PrefConstant.SERVER_HIT_STATUS.keyName.toString(),
+                            false
+                        )
                     } else {
-                        AppPreference.saveBoolean(PrefConstant.SERVER_HIT_STATUS.keyName.toString(), true)
+                        AppPreference.saveBoolean(
+                            PrefConstant.SERVER_HIT_STATUS.keyName.toString(),
+                            true
+                        )
                     }
                 }
 
@@ -272,16 +282,38 @@ class TableEditFragment : Fragment() {
                 }
 
                 //Adding Extra Field Locally [Clear Server Hit Flag] for internal use purpose:-
-                dataList.add(
-                    TableEditHelper(
-                        "Clear FBatch",
-                        if (AppPreference.getBoolean(PrefConstant.SERVER_HIT_STATUS.keyName.toString()))
-                            "1"
-                        else
-                            "0"
-                    )
-                )
 
+                if (type == BankOptions.TPT.ordinal) {
+                    dataList.add(
+                        TableEditHelper(
+                            "Clear FBatch",
+                            if (AppPreference.getBoolean(PrefConstant.SERVER_HIT_STATUS.keyName.toString()))
+                                "1"
+                            else
+                                "0"
+                        )
+                    )
+
+                    val requiredField = arrayListOf(
+                        "Terminal Id",
+                        "Merchant Id",
+                        "STAN",
+                        "Batch Number",
+                        "Invoice Number",
+                        "Clear FBatch"
+                    )
+                    val tempList = arrayListOf<TableEditHelper>()
+                    for (dList in dataList) {
+                        for (rFields in requiredField) {
+                            if (dList.titleName == rFields) {
+                                tempList.add(dList)
+                            }
+                        }
+
+                    }
+                    dataList.clear()
+                    dataList.addAll(tempList)
+                }
                 launch(Dispatchers.Main) {
                     v.findViewById<RecyclerView>(R.id.table_edit_rv).apply {
                         layoutManager = LinearLayoutManager(activity)
@@ -482,7 +514,10 @@ SubMenuFragment : Fragment(), IOnSubMenuItemSelectListener {
                                                     batchNumber.toString()
                                                 )
                                                 // Added by MKK for automatic FBatch value zero in case of Clear Batch
-                                                AppPreference.saveBoolean(PrefConstant.SERVER_HIT_STATUS.keyName.toString(), false)
+                                                AppPreference.saveBoolean(
+                                                    PrefConstant.SERVER_HIT_STATUS.keyName.toString(),
+                                                    false
+                                                )
                                                 //
 
                                                 ROCProviderV2.saveBatchInPreference(batchList)
@@ -503,7 +538,10 @@ SubMenuFragment : Fragment(), IOnSubMenuItemSelectListener {
                                             "OK", {
                                             }, {
                                                 // Added by MKK for automatic FBatch value zero in case of Clear Batch
-                                                AppPreference.saveBoolean(PrefConstant.SERVER_HIT_STATUS.keyName.toString(), false)
+                                                AppPreference.saveBoolean(
+                                                    PrefConstant.SERVER_HIT_STATUS.keyName.toString(),
+                                                    false
+                                                )
                                                 //
                                             }
                                         )
