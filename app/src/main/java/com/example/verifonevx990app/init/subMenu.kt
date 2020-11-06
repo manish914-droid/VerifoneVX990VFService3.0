@@ -294,7 +294,7 @@ class TableEditFragment : Fragment() {
                                 "0"
                         )
                     )
-
+                    //In Case Of AMEX only below arraylist iteams options are shown to user (In TPT table)
                     val requiredField = arrayListOf(
                         "Terminal Id",
                         "Merchant Id",
@@ -303,20 +303,10 @@ class TableEditFragment : Fragment() {
                         "Invoice Number",
                         "Clear FBatch"
                     )
-                    /* for (dList in dataList) {
-                         for (rFields in requiredField) {
-                             if (dList.titleName == rFields) {
-                                 tempList.add(dList)
-                             }
-                         }
-
-                     }
-                     dataList.clear()
-                     dataList.addAll(tempList)*/
-                    var tempList =
-                        dataList.filter { m -> requiredField.any { it == m.titleName } } as ArrayList<TableEditHelper>
+                    val requiredList =
+                        dataList.filter { dl -> requiredField.any { rf -> rf == dl.titleName } } as ArrayList<TableEditHelper>
                     dataList.clear()
-                    dataList.addAll(tempList)
+                    dataList.addAll(requiredList)
                 }
                 launch(Dispatchers.Main) {
                     v.findViewById<RecyclerView>(R.id.table_edit_rv).apply {
