@@ -79,7 +79,7 @@ interface ILed {
     /** \en_
      * @brief control led
      *
-	 * @param led 0x01-blue, 0x02-green, 0x03-yellow, 0x04-red
+	 * @param led 0x01-blue, 0x02-green, 0x04-yellow, 0x08-red
 	 * @param status 0-close 1-open
      * \en_e
      * \code{.java}

@@ -9,7 +9,7 @@ interface IDukpt {
      * \en_
      * @brief load the DUKPT key
      *
-	 * @param keyId the id (index 0~4)
+	 * @param keyId the id (index 0~99)
 	 * @param ksn the key serial number
 	 * @param key the key
 	 * @param checkValue the check value (default NULL)
@@ -142,7 +142,7 @@ interface IDukpt {
 	 * @param keyData
      * <ul>
      *     <li>keyId(int)</li>
-     *     <li>ksn(String) optional, keep current value if not set</li>
+     *     <li class="strike"><b>ksn(String) optional, keep current value if not set</b></li>
      *     <li>autoIncrease(boolean) optional, keep current value if not set</li>
      * </ul>
      * @return true-success false-failed

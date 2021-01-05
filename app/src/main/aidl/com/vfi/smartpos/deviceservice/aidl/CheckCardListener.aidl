@@ -122,7 +122,9 @@ interface CheckCardListener {
 	 * <li>RF_PASS_ERROR(4) - 非接挥卡失败</li>
 	 * <li>RF_ACTIVATE_ERROR(5) - 非接卡激活失败</li>
 	 * <li>MULTI_CARD_CONFLICT_ERROR(6) - 多卡冲突</li>
-	 * <li>M1_CARD_UNSUPPORT_EMV_ERROR(7) - [M1Sn]M1卡不支持EMV</li>
+	 * <li>M1_CARD_UNSUPPORT_EMV_ERROR(7) - M1卡不支持EMV</li>
+	 * <li>FELICA_CARD_UNSUPPORT_EMV_ERROR(8) - Felica卡不支持EMV</li>
+	 * <li>DESFIRE_CARD_UNSUPPORT_EMV_ERROR(9) - DesFire卡不支持</li>
 	 * </ul>
 	 * @param message - 错误描述
      * \_en_
@@ -139,6 +141,8 @@ interface CheckCardListener {
 	 * <li>RF_ACTIVATE_ERROR(5) - contactless card active error</li>
 	 * <li>MULTI_CARD_CONFLICT_ERROR(6) - found multi-cards</li>
 	 * <li>M1_CARD_UNSUPPORT_EMV_ERROR(7) - [M1Sn]M1 card unsupport in EMV process</li>
+	 * <li>FELICA_CARD_UNSUPPORT_EMV_ERROR(8) - emv unsupport Felica card</li>
+	 * <li>DESFIRE_CARD_UNSUPPORT_EMV_ERROR(9) -[DesFireSN] DesFire card unsupport in EMV process</li>
 	 * </ul>
 	 * @param message the description.
      * \en_e

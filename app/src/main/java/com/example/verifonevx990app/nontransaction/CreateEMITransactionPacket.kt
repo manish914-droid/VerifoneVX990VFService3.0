@@ -147,7 +147,7 @@ class CreateEMITransactionPacket(private var cardProcessedData: CardProcessedDat
                 val dateFormater = SimpleDateFormat("MMdd", Locale.getDefault())
                 cardProcessedData.setDate(dateFormater.format(date))
                 cardProcessedData.setTimeStamp(date.toString())
-                year = SimpleDateFormat("YY", Locale.getDefault()).format(date)
+                year = SimpleDateFormat("yy", Locale.getDefault()).format(date)
             } catch (ex: Exception) {
                 ex.printStackTrace()
             }

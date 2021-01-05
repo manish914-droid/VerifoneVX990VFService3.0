@@ -127,8 +127,8 @@ class VoidOfflineSalePrintReceipt {
         //Upper Body Print Code:-
         alignLeftRightText(
             fmtAddTextInLine,
-            "DATE : ${timeFormater.format(date)}",
-            "TIME : ${timeStampFormattted.format(date)}"
+            "DATE : ${timeStampFormattted.format(date)}",
+            "TIME : ${timeFormater.format(date)}"
         )
         alignLeftRightText(fmtAddTextInLine, "MID : ${batch.mid}", "TID : ${batch.tid}")
         alignLeftRightText(
@@ -200,9 +200,9 @@ class VoidOfflineSalePrintReceipt {
         )
         val signatureMsg = "SIGN ..............................................."
         // printer?.addText(format, signatureMsg)
-        printer?.feedLine(2)
+       // printer?.feedLine(2) (Comment As per the new AIDL)
         alignLeftRightText(format, signatureMsg, "", "")
-        printer?.feedLine(2)
+       // printer?.feedLine(2) (Comment As per the new AIDL)
         //Agreement Body Code:-
         val ipt =
             IssuerParameterTable.selectFromIssuerParameterTable(AppPreference.WALLET_ISSUER_ID)

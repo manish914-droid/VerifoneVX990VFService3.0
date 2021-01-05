@@ -1,6 +1,5 @@
 package com.vfi.smartpos.deviceservice.aidl;
 import com.vfi.smartpos.deviceservice.aidl.TusnData;
-import android.os.Bundle;
 
 /**
  * \cn_
@@ -517,7 +516,6 @@ interface IDeviceInfo {
      * <li> Discover(String)</li>
      * <li> QuickPass(String)</li>
      * <li> GemaltoPure(String)</li>
-     * <li> RuPay(String)</li>
      * </ul>
      * \en_e
      * \code{.java}
@@ -540,6 +538,16 @@ interface IDeviceInfo {
      */
     String getCertificate( int mode );
 
+    /**
+     * \en_
+     * @brief Get Battery charging times
+     * @return times of chargeing battery
+     * \en_e
+     * \code{.java}
+     * \endcode
+     * @version
+     * @see
+     */
     String getBatteryChargingTimes();
 
      /**
@@ -572,4 +580,34 @@ interface IDeviceInfo {
      * @see
      */
      String getButtonBatteryVol();
+
+    /**
+     * \en_
+     * @brief Get all of infomation about device
+     * @return bundle
+     *      <ul>
+     *          <li>SN(String) Serial No<li>
+     *          <li>PN(String) Product No<li>
+     *          <li>IMSI(String) International Mobile Subscriber Identity<li>
+     *          <li>IMEI(String) International Mobile Equipment Identity<li>
+     *          <li>MEID(String) Mobile Equipment Identifier<li>
+     *          <li>manufacture(String) get manufature message<li>
+     *          <li>deviceModel(String) get device model<li>
+     *          <li>androidOsVer(String) get android OS version<li>
+     *          <li>androidKernalVer(String) get android kernel version<li>
+     *          <li>romVer(String) get rom version<li>
+     *          <li>firmwareVer(String) get firmware version<li>
+     *          <li>hardwareVer(String) get hardware version<li>
+     *          <li>k21Ver(String) get k21 version<li>
+     *          <li>VFSerivceVer(String) get VFService version<li>
+     *          <li>VRKSn(String) get VRK sn<li>
+     *          <li>SponsorID(String) get sponsor id<li>
+     *      </ul>
+     * \en_e
+     * \code{.java}
+     * \endcode
+     * @version
+     * @see
+     */
+    Bundle getDeviceInfo();
 }

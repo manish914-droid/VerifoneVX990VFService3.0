@@ -1,5 +1,6 @@
 package com.example.verifonevx990app.vxUtils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
@@ -50,6 +51,7 @@ object VFService {
     val NEW_IP_ADDRESS = "122.176.84.29"
     var savedPan = ""
     var PORT = 8101//4124
+    lateinit var strnum: String
 
 
     fun getIpPort():InetSocketAddress?{
@@ -66,6 +68,7 @@ object VFService {
 
     fun connectToVFService(context: Context){
         val conn: ServiceConnection = object : ServiceConnection {
+            @SuppressLint("LongLogTag")
             override fun onServiceConnected(name: ComponentName, service: IBinder) {
                 //IDeviceService is used to get Each Interface Object from Interface:-
                 vfDeviceService = IDeviceService.Stub.asInterface(service)
@@ -80,8 +83,33 @@ object VFService {
                     vfBeeper = vfDeviceService?.beeper
                     vfPinPad = vfDeviceService?.getPinpad(1)
                     vfPrinter= vfDeviceService?.printer
-                    Log.d("Device Serial No:- " , vfDeviceInfo?.serialNo?:"")
-                    AppPreference.saveString("serialNumber" , vfDeviceInfo?.serialNo?:"")
+
+                   var bundle: Bundle? = vfDeviceInfo?.deviceInfo
+                   var numericSerialnum: String? = bundle?.get("VRKSn") as String
+
+                    Log.d("Device Numeric  No:- " ,    numericSerialnum)
+
+                    if(isNullOrEmpty(numericSerialnum)){
+                        Log.d("Device  Serial No:- " , vfDeviceInfo?.serialNo?:"")
+                        AppPreference.saveString("serialNumber" , vfDeviceInfo?.serialNo?:"")
+                    }
+                    else{
+                        strnum = String()
+                        var number: String? = bundle?.get("VRKSn") as String
+
+                        var numericSerialnum = number?.split("-")
+
+                        numericSerialnum?.forEach {str->
+                            strnum += str
+                        }
+
+
+                        Log.d("Device Numeric Serial No:- " , strnum)
+                        AppPreference.saveString("serialNumber" , strnum)
+
+                    }
+
+
                     Log.d("Device IMEI No:- " , vfDeviceInfo?.imei?:"")
                     AppPreference.saveString("imeiNumber" , vfDeviceInfo?.imei?:"")
                     Log.d("Android Version:- " , vfDeviceInfo?.androidOSVersion?:"")
@@ -118,6 +146,12 @@ object VFService {
                 Toast.makeText(context, "service binds successfully", Toast.LENGTH_SHORT).show()
             }*/
         }
+    }
+
+    fun isNullOrEmpty(str: String?): Boolean {
+        if (str != null && !str.trim().isEmpty())
+            return false
+        return true
     }
 
     //Below Method is used to Inject Decripted TMK in VFService AIDL IPinPad.loadMainKey(int keyId, byte[] key, byte[] checkValue):-

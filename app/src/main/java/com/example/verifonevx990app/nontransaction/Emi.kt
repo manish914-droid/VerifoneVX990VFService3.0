@@ -200,7 +200,7 @@ class EmiActivity : BaseActivity(), IBenefitTable, View.OnClickListener {
 
                     }
 
-                    alertBoxWithAction(null, null,
+                  /*  alertBoxWithAction(null, null,
                             getString(R.string.emis),
                             getString(R.string.no_emi),
                             false,
@@ -212,7 +212,7 @@ class EmiActivity : BaseActivity(), IBenefitTable, View.OnClickListener {
                                     })
                                 }
                             },
-                            {})
+                            {})*/
 
                 }
 

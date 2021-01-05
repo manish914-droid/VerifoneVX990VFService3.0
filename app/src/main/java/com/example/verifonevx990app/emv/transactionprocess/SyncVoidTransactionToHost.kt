@@ -61,7 +61,7 @@ class SyncVoidTransactionToHost(var transactionISOByteArray: IsoDataWriter?, var
                             val responseIsoData: IsoDataReader = readIso(result, false)
                         } catch (ex: Exception) {
                             ex.printStackTrace()
-                          //  syncTransactionCallback(false, "", result, null)
+                            syncTransactionCallback(false, "", result, null)
                         }
                         Log.d("Success Data:- ", result)
                         val responseIsoData: IsoDataReader = readIso(result.toString(), false)

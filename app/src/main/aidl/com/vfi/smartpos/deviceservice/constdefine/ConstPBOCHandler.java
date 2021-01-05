@@ -75,7 +75,6 @@ public class ConstPBOCHandler {
 
             public static final String KEY_EXPIRED_DATE_String = "EXPIRED_DATE"; //(String) expired date</li>
 
-
             public static final String KEY_CARD_TYPE_String = "CARD_TYPE"; //(String) expired date</li>
         }
     }

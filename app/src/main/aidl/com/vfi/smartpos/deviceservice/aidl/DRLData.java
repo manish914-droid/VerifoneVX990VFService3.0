@@ -8,6 +8,17 @@ public class DRLData implements Parcelable {
     private byte[] drlID = null; //Dynamic Limit ID (Amex:9f70 Visa:9F5A) Default ID [FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF]
     private byte[] clssFloorLimit = null; //cn6 1.00=[00, 00, 00, 00, 01, 00]
     private byte[] clssTransLimit = null; //cn6 1.00=[00, 00, 00, 00, 01, 00]
+    private byte[] cvmRequiredLimit = null;
+
+    public DRLData() {
+
+    }
+    public DRLData(byte[] drlID, byte[] clssFloorLimit, byte[] clssTransLimit, byte[] cvmRequiredLimit) {
+        this.drlID = drlID;
+        this.clssFloorLimit = clssFloorLimit;
+        this.clssTransLimit = clssTransLimit;
+        this.cvmRequiredLimit = cvmRequiredLimit;
+    }
 
     public byte[] getDrlID() {
         return drlID;
@@ -23,19 +34,6 @@ public class DRLData implements Parcelable {
 
     public byte[] getCvmRequiredLimit() {
         return cvmRequiredLimit;
-    }
-
-    private byte[] cvmRequiredLimit = null;
-
-    public DRLData() {
-
-    }
-
-    public DRLData(byte[] drlID, byte[] clssFloorLimit, byte[] clssTransLimit, byte[] cvmRequiredLimit) {
-        this.drlID = drlID;
-        this.clssFloorLimit = clssFloorLimit;
-        this.clssTransLimit = clssTransLimit;
-        this.cvmRequiredLimit = cvmRequiredLimit;
     }
 
     public static final Creator<DRLData> CREATOR = new Creator<DRLData>() {

@@ -54,7 +54,7 @@ class CreateAuthPacket {
                 val dateTime: Long = Calendar.getInstance().timeInMillis
                 val time: String = SimpleDateFormat("HHmmss", Locale.getDefault()).format(dateTime)
                 val date: String = SimpleDateFormat("MMdd", Locale.getDefault()).format(dateTime)
-                val year: String = SimpleDateFormat("YY", Locale.getDefault()).format(dateTime)
+                val year: String = SimpleDateFormat("yy", Locale.getDefault()).format(dateTime)
                 logger("AUTH YEAR->", year, "e")
                 //adding field 56
 

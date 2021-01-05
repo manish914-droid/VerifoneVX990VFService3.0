@@ -521,7 +521,7 @@ fun createTipAdjustISO(tipAmt: Float, batch: BatchFileDataTable): IsoDataWriter 
         logger("Testdate", dateFormatter.format(timeStamp))
         logger("Miliii", timeStamp.toString())
         val previousTransYear: String =
-            SimpleDateFormat("YY", Locale.getDefault()).format(timeStamp)
+            SimpleDateFormat("yy", Locale.getDefault()).format(timeStamp)
 
         logger("yy", previousTransYear)
 
@@ -583,7 +583,7 @@ fun createTipAdjustISO(tipAmt: Float, batch: BatchFileDataTable): IsoDataWriter 
             val dateFormater = SimpleDateFormat("MMdd", Locale.getDefault())
             monthDate = dateFormater.format(date)
             //  cardProcessedData.setTimeStamp(date.toString())
-            year = SimpleDateFormat("YY", Locale.getDefault()).format(date)
+            year = SimpleDateFormat("yy", Locale.getDefault()).format(date)
         } catch (ex: Exception) {
             ex.printStackTrace()
         }

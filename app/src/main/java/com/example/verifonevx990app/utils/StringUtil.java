@@ -147,4 +147,6 @@ public class StringUtil {
         a = rightAppend("*", 6, a);
         //System.out.println(a);
     }
+
+
 }

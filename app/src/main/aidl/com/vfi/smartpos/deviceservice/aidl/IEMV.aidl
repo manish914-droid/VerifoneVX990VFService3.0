@@ -9,6 +9,7 @@ import com.vfi.smartpos.deviceservice.aidl.DRLData;
 import com.vfi.smartpos.deviceservice.aidl.BLKData;
 import com.vfi.smartpos.deviceservice.aidl.IssuerUpdateHandler;
 import com.vfi.smartpos.deviceservice.aidl.EMVTransParams;
+import com.vfi.smartpos.deviceservice.aidl.RequestACTypeHandler;
 
 /**
  * \_en_
@@ -482,7 +483,7 @@ interface IEMV {
     /**
      * \en_
      * @brief enable Track(It's not necessary.)
-	 * @param trkNum - bit0=1 enable trk1; bit1=1 enable trk2; bit2=1 enable trk3;
+	 * @param trkNum - bit0=1 enable trk1; bit1=1 enable trk2; bit2=1 enable trk3. So trkNum < 0 or trkNum > 7 will close track1&2&3
      * \en_e
      * \code
      * \endcode
@@ -570,4 +571,42 @@ interface IEMV {
     *
     */
 	void startEmvWithTransParams(in EMVTransParams emvParams, in Bundle extend, EMVHandler handler);
+
+
+    /**
+     * \_en_
+     * @brief set before startEMV(), set callback for
+     * \en_e
+     * @version 2.20.3.12
+     * @see RequestACTypeHandler.aidl
+     */
+	void setRequestACTypeCallBack(RequestACTypeHandler requestACTypehandler);
+
+    /**
+     * \_en_
+     * re-set 1GAC AC type
+     * @param requestACType: chip card can change 1GAC AC Typt(not necessary), 0-AAC, 1-ARQC, 2-TC</li>
+     * \en_e
+     */
+	void setRequestACType(int requestACType);
+
+
+    /**
+     * \_en
+     * select kernel version before startEMV()
+     * @param kernelID pls refer CTLSKernelID
+	 * @param kernelID is Map<Integer kernelID, Integer ver>,
+	        kernelId- kernelID(check CTLSKernelID)
+	        ver- 0-AMEX(3.1 default) 1-AMEX(4.0.2)
+     * \en_e
+     */
+	void reRegistKernelVersion(in Map tlvList);
+
+    /**
+     * \_en
+     * reset emvHandler in EMV process
+     * @param EMVHandler please refer EMVHandler
+     * \en_e
+     */
+	void resetEmvHandler(EMVHandler handler);
 }

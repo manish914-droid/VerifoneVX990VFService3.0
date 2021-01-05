@@ -67,7 +67,6 @@ public class ConstIPinpad {
              */
             public static final String KEY_pan_String ="pan";
 
-
             /**
              * @brief the want pin length
              *

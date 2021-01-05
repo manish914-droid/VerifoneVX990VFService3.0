@@ -168,14 +168,14 @@ interface IPrinter {
             EAN_8,
             EAN_13,
             ITF,
-            MAXICODE,
+            MAXICODE(not support),
             PDF_417,
-            QR_CODE,
-            RSS_14,
+            QR_CODE(not support),
+            RSS_14(not support),
             RSS_EXPANDED,
             UPC_A,
             UPC_E,
-            UPC_EAN_EXTENSION;
+            UPC_EAN_EXTENSION(not support);
 
             private BarcodeFormat() {
             }
@@ -312,7 +312,6 @@ interface IPrinter {
 	 * @param listener - the call back listener to tell the print result
 	 * \en_e
      * @see IPrinter#startPrint
-	 * @deprecated {This interface has been deprecated, please See IPrinter#startPrint }
      */
     void  startSaveCachePrint(PrinterListener listener);
 
@@ -370,4 +369,17 @@ interface IPrinter {
 	 * \endcode
 	 */
 	void addBmpImage(in Bundle format, in Bitmap image);
+
+	/**
+     * \en_
+     *  @brief Add screen capture to print
+     * @param format - the format setting
+     * <ul>
+     * <li>offset(int) - the offset from left</li>
+     * <li>width(int) - the width want to print.(MAX = 384)</li>
+     * <li>height(int) - the height want to print</li>
+     * <li>gray(int) - set pixcel gray to pint（0~255 default = 128）</li>
+     * </ul>
+     */
+    void addScreenCapture(in Bundle format);
 }

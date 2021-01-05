@@ -132,6 +132,10 @@ public class Utility {
         }
     }
 
+    public static void getEncryptedField57DataForManualSale(){
+
+    }
+
     public static void getCardHolderName(CardProcessedDataModal cardProcessedDataModal, String str, char starname, char endName) {
         // Length of string
         if (null != str && !str.isEmpty()) {

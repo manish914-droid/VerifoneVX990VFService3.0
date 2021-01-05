@@ -43,7 +43,7 @@ interface ISmartCardReader {
 
 	/**
      * \_en_
-     * @brief check if the card avalible
+     * @brief check if the card exist
      *
 	 * @return true for available, false for unavailable
      * \en_e

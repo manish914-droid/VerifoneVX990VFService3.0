@@ -179,7 +179,7 @@ interface IPinpad {
      * \en_
      * @brief load the encrypt DUKPT key(decrypt TEK index = 0)
      *
-	 * @param keyId the id (index 0~4)
+	 * @param keyId the id (index 0~99)
 	 * @param ksn the key serial number
 	 * @param key the key
 	 * @param checkValue the check value (default NULL)
@@ -682,11 +682,11 @@ interface IPinpad {
      * <ul>
      * <li>TYPE_DES - 0x00 DES Type </li>
      * <li>TYPE_3DES - 0x01 3DES Type(EBC) </li>
-     * <li class="strike">TYPE_SM4 - 0x02 SM4 Type </li>
-     * <li class="strike">TYPE_AES - 0x03 AES Type</li>
-     * <li>TYPE_SM2_PUBKEY - 0x04 SM2 Type(use public key) </li>
-     * <li>TYPE_SM2_PRIVKEY - 0x05 SM2 Type(use private key) </li>
-     * <li>TYPE_3DES - 0x06 3DES Type(CBC) NOTICE: WorkKey(TD) id = 60 will be occupied, so user app should not use 60 index of TD </li>
+     * <li>TYPE_SM4 - 0x02 SM4 Type </li>
+     * <li>TYPE_AES - 0x03 AES Type</li>
+     * <li class="strike">>TYPE_SM2_PUBKEY - 0x04 SM2 Type(use public key) </li>
+     * <li class="strike">>TYPE_SM2_PRIVKEY - 0x05 SM2 Type(use private key) </li>
+     * <li class="strike">>TYPE_3DES - 0x06 3DES Type(CBC) NOTICE: WorkKey(TD) id = 60 will be occupied, so user app should not use 60 index of TD </li>
      * </ul>
 	 * @param key the source key
 	 * @param data the source date
@@ -839,6 +839,7 @@ interface IPinpad {
      * <li> 0x31-SM4 DATA</li>
      * <li> 0x32-AES DATA</li>
      * <li> 0x40-DUKPT</li>
+     * <li> 0xFF-FORMAT ALL KEY</li>
      * </ul>
      * \en_e
      * \code{.java}
@@ -852,7 +853,7 @@ interface IPinpad {
      * \en_
      * @brief load the DUKPT key
      *
-	 * @param keyId the id (index 0~4)
+	 * @param keyId the id (index 0~99)
 	 * @param ksn the key serial number
 	 * @param key the key
 	 * @param checkValue the check value (default NULL)
@@ -947,7 +948,7 @@ interface IPinpad {
      *
 	 * @param keyId - data key index(0~99)
 	 * @param keyType - key type
-	 *     |---0x01 master key<BR>
+	 *     |---0x01 3DES master key<BR>
 	 *     |---0x02 SM4 master key<BR>
 	 *     |---0x03 AES master key<BR>
 	 * @param algorithmMode - encryption algorithm<BR>

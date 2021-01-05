@@ -230,10 +230,7 @@ class VFTransactionActivity : BaseActivity() {
                 if (cardProcessedData.getTransType() == TransactionType.SALE.type || cardProcessedData.getTransType() == TransactionType.PRE_AUTH.type || cardProcessedData.getTransType() == TransactionType.REFUND.type) {
                     emvProcessNext(cardProcessedData)
                 } else {
-                    val transactionEMIISO = CreateEMITransactionPacket(
-                        cardProcessedData,
-                        emiCustomerDetails
-                    ).createTransactionPacket()
+                    val transactionEMIISO = CreateEMITransactionPacket(cardProcessedData, emiCustomerDetails).createTransactionPacket()
                     logger("Transaction REQUEST PACKET --->>", transactionEMIISO.isoMap, "e")
                   //  runOnUiThread { showProgress(getString(R.string.sale_data_sync)) }
                     GlobalScope.launch(Dispatchers.IO) {
@@ -264,8 +261,7 @@ class VFTransactionActivity : BaseActivity() {
             }
 
             DetectCardType.MANUAL_ENTRY_TYPE -> {
-                val transactionISO =
-                    CreateTransactionPacket(cardProcessedData).createTransactionPacket()
+                val transactionISO = CreateTransactionPacket(cardProcessedData).createTransactionPacket()
                 logger("Transaction REQUEST PACKET --->>", transactionISO.isoMap, "e")
                 //runOnUiThread { showProgress(getString(R.string.sale_data_sync)) }
                 GlobalScope.launch(Dispatchers.IO) {
@@ -1056,6 +1052,7 @@ class VFTransactionActivity : BaseActivity() {
                     emiCustomerDetails = data.getParcelableExtra<EmiCustomerDetails>("emi")
                     var cardProcessedData: CardProcessedDataModal =
                         data.getSerializableExtra("cardprocess") as CardProcessedDataModal
+                    globalCardProcessedModel = cardProcessedData
                     when (globalCardProcessedModel.getReadCardType()) {
                         DetectCardType.MAG_CARD_TYPE -> {
                             // for Mag

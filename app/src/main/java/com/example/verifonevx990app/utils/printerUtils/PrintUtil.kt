@@ -8,6 +8,7 @@ import android.text.TextUtils
 import android.util.Log
 import com.example.verifonevx990app.BuildConfig
 import com.example.verifonevx990app.R
+
 import com.example.verifonevx990app.emv.transactionprocess.CardProcessedDataModal
 import com.example.verifonevx990app.emv.transactionprocess.VFTransactionActivity
 import com.example.verifonevx990app.main.MainActivity
@@ -32,6 +33,8 @@ import java.io.InputStream
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 const val HDFC_LOGO = ""
@@ -472,10 +475,10 @@ class PrintUtil(context: Context?) {
             val baseAmount = "%.2f".format(printerReceiptData.transactionalAmmount.toDouble() / 100)
 
             logger("PS_baseamt", (printer?.status).toString(), "e")
-            printer?.feedLine(2)
+           //printer?.feedLine(2) (Comment As per the new AIDL)
             //  alignLeftRightText(fmtAddTextInLine, "", "")
             if (printerReceiptData.transactionType == TransactionType.VOID.type && printerReceiptData.tipAmmount != "") {
-                //  printer?.feedLine(2)
+                // //printer?.feedLine(2) (Comment As per the new AIDL)
                 printer?.addTextInLine(
                     fmtAddTextInLine,
                     "BASE AMOUNT  :    Rs  ${"%.2f".format((printerReceiptData.totalAmmount.toFloat()) / 100)}",
@@ -485,7 +488,7 @@ class PrintUtil(context: Context?) {
                 )
 
             } else {
-                //   printer?.feedLine(2)
+                //  //printer?.feedLine(2) (Comment As per the new AIDL)
                 printer?.addTextInLine(
                     fmtAddTextInLine,
                     "BASE AMOUNT  :    Rs  ${printerReceiptData.baseAmmount}",
@@ -500,7 +503,7 @@ class PrintUtil(context: Context?) {
             //   val ttamount=(baseAmount.toFloat())+((printerReceiptData.tipAmmount.toFloat())/100)
             if (isTipAllowed && printerReceiptData.transactionType == TransactionType.TIP_SALE.type) {
                 val tipamt = "%.2f".format((printerReceiptData.tipAmmount.toFloat()) / 100)
-                printer?.feedLine(2)
+               //printer?.feedLine(2) (Comment As per the new AIDL)
                 printer?.addTextInLine(
                     fmtAddTextInLine,
                     "TIP AMOUNT   :    Rs  $tipamt",
@@ -510,7 +513,7 @@ class PrintUtil(context: Context?) {
                 )
 
             } else if (isTipAllowed && printerReceiptData.transactionType == TransactionType.SALE.type) {
-                printer?.feedLine(2)
+               //printer?.feedLine(2) (Comment As per the new AIDL)
                 printer?.addTextInLine(
                     fmtAddTextInLine,
                     "TIP AMOUNT   :    ...............................",
@@ -538,7 +541,7 @@ class PrintUtil(context: Context?) {
                 tipAndTransAmount += baseAmount.toDouble()
             }
 
-            printer?.feedLine(2)
+           //printer?.feedLine(2) (Comment As per the new AIDL)
             printer?.addTextInLine(
                 fmtAddTextInLine,
                 "TOTAL AMOUNT :    Rs  ${"%.2f".format(tipAndTransAmount)}",
@@ -562,10 +565,10 @@ class PrintUtil(context: Context?) {
                 centerText(format, pinVerifyMsg)
                 centerText(format, signatureMsg)
             } else {
-                printer?.feedLine(2)
+               //printer?.feedLine(2) (Comment As per the new AIDL)
                 alignLeftRightText(format, pinVerifyMsg, "", "")
                 alignLeftRightText(format, signatureMsg, "", "")
-                printer?.feedLine(2)
+               //printer?.feedLine(2) (Comment As per the new AIDL)
                 // printer?.addText(format, pinVerifyMsg)
                 //  printer?.addText(format, signatureMsg)
             }
@@ -2010,9 +2013,9 @@ class PrintUtil(context: Context?) {
                 PrinterConfig.addText.Alignment.BundleName,
                 PrinterConfig.addText.Alignment.CENTER
             )
-            printer?.feedLine(2)
+           //printer?.feedLine(2) (Comment As per the new AIDL)
             alignLeftRightText(format, signatureMsg, "", "")
-            printer?.feedLine(2)
+           //printer?.feedLine(2) (Comment As per the new AIDL)
             val ipt =
                 IssuerParameterTable.selectFromIssuerParameterTable(AppPreference.WALLET_ISSUER_ID)
 
@@ -2095,7 +2098,7 @@ class PrintUtil(context: Context?) {
             val dateTime: Long = Calendar.getInstance().timeInMillis
             val time: String = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(dateTime)
             val date: String = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(dateTime)
-            val year: String = SimpleDateFormat("YY", Locale.getDefault()).format(dateTime)
+            val year: String = SimpleDateFormat("yy", Locale.getDefault()).format(dateTime)
             logger("AUTH YEAR->", year, "e")
             alignLeftRightText(textInLineFormatBundle, "DATE : $date", "TIME : $time")
             alignLeftRightText(
@@ -2247,7 +2250,7 @@ class PrintUtil(context: Context?) {
             }
 
             printSeperator(textFormatBundle)
-            printer?.feedLine(1)
+          //printer?.feedLine(2) (Comment As per the new AIDL)
 
             printer?.addText(textFormatBundle, footerText[1])
 
@@ -2498,16 +2501,16 @@ class PrintUtil(context: Context?) {
             printSeperator(textFormatBundle)
 
             centerText(textFormatBundle, "BASE AMOUNT  :     Rs  $txnAmount", true)
-            printer?.feedLine(2)
+           //printer?.feedLine(2) (Comment As per the new AIDL)
             if (printerReceiptData.isPinverified) {
                 //  printer?.addText(format, pinVerifyMsg)
                 pinVerifyMsg?.let { centerText(textInLineFormatBundle, it) }
                 signatureMsg?.let { centerText(textInLineFormatBundle, it) }
             } else {
-                printer?.feedLine(2)
+               //printer?.feedLine(2) (Comment As per the new AIDL)
                 pinVerifyMsg?.let { alignLeftRightText(textInLineFormatBundle, it, "", "") }
                 signatureMsg?.let { alignLeftRightText(textInLineFormatBundle, it, "", "") }
-                printer?.feedLine(2)
+               //printer?.feedLine(2) (Comment As per the new AIDL)
                 // printer?.addText(format, pinVerifyMsg)
                 //  printer?.addText(format, signatureMsg)
             }
@@ -2527,7 +2530,7 @@ class PrintUtil(context: Context?) {
                 }
             }
             //    printer?.addText(textInLineFormatBundle, ipt?.volletIssuerDisclammer)
-            printer?.feedLine(2)
+           //printer?.feedLine(2) (Comment As per the new AIDL)
             centerText(textInLineFormatBundle, copyType.pName)
             printer?.addText(textInLineFormatBundle, footerText[0])
             printer?.addText(textInLineFormatBundle, footerText[1])
@@ -2726,6 +2729,8 @@ class PrintUtil(context: Context?) {
             )
         }
     }
+
+
 
     private fun getNameByTransactionType(transactionType: Int): String {
         var tTyp = ""

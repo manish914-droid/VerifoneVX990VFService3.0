@@ -169,24 +169,17 @@ class ProcessCard(var activity: Activity, var handler: Handler, var cardProcesse
                                                 )
                                             } else {
                                                 if (cardProcessedDataModal.getTransType() == TransactionType.SALE.type) {
-                                                    (activity as VFTransactionActivity).checkEmiInstaEmi(
-                                                        cardProcessedDataModal
-                                                    ) {
+                                                    (activity as VFTransactionActivity).checkEmiInstaEmi(cardProcessedDataModal) {
                                                         cardProcessedDataModal = it
                                                         if (cardProcessedDataModal.getTransType() == TransactionType.EMI_SALE.type) {
 
                                                         } else {
-                                                            processSwipeCardWithPINorWithoutPIN(
-                                                                isPin,
-                                                                cardProcessedDataModal
-                                                            )
+                                                            processSwipeCardWithPINorWithoutPIN(isPin, cardProcessedDataModal)
                                                         }
 
                                                     }
                                                 } else if (cardProcessedDataModal.getTransType() == TransactionType.EMI_SALE.type) {
-                                                    (activity as VFTransactionActivity).checkEmiBankEmi(
-                                                        cardProcessedDataModal
-                                                    ) {
+                                                    (activity as VFTransactionActivity).checkEmiBankEmi(cardProcessedDataModal) {
                                                     }
 
                                                 } else {
@@ -198,29 +191,21 @@ class ProcessCard(var activity: Activity, var handler: Handler, var cardProcesse
                                             }
                                         } else {
                                             if (cardProcessedDataModal.getTransType() == TransactionType.SALE.type) {
-                                                (activity as VFTransactionActivity).checkEmiInstaEmi(
-                                                    cardProcessedDataModal
-                                                ) {
+                                                (activity as VFTransactionActivity).checkEmiInstaEmi(cardProcessedDataModal) {
                                                     cardProcessedDataModal = it
                                                     if (cardProcessedDataModal.getTransType() == TransactionType.EMI_SALE.type) {
+                                                        processSwipeCardWithPINorWithoutPIN(isPin, cardProcessedDataModal)
 
                                                     } else {
-                                                        processSwipeCardWithPINorWithoutPIN(
-                                                            isPin, cardProcessedDataModal
-                                                        )
+                                                        processSwipeCardWithPINorWithoutPIN(isPin, cardProcessedDataModal)
                                                     }
                                                 }
                                             } else if (cardProcessedDataModal.getTransType() == TransactionType.EMI_SALE.type) {
-                                                (activity as VFTransactionActivity).checkEmiBankEmi(
-                                                    cardProcessedDataModal
-                                                ) {
+                                                (activity as VFTransactionActivity).checkEmiBankEmi(cardProcessedDataModal) {
                                                     //   iemv?.importCardConfirmResult(ConstIPBOC.importCardConfirmResult.pass.allowed)
                                                 }
                                             } else {
-                                                processSwipeCardWithPINorWithoutPIN(
-                                                    isPin,
-                                                    cardProcessedDataModal
-                                                )
+                                                processSwipeCardWithPINorWithoutPIN(isPin, cardProcessedDataModal)
                                             }
                                         }
                                     }
@@ -337,6 +322,7 @@ class ProcessCard(var activity: Activity, var handler: Handler, var cardProcesse
                                         cardProcessedDataModal.setPosEntryMode(PosEntryModeType.EMV_POS_ENTRY_FALL_MAGPIN.posEntry.toString())
                                     else
                                         cardProcessedDataModal.setPosEntryMode(PosEntryModeType.POS_ENTRY_SWIPED_NO4DBC_PIN.posEntry.toString())
+
                                     cardProcessedDataModal.setApplicationPanSequenceValue("00")
                                     transactionCallback(cardProcessedDataModal)
 

@@ -1326,14 +1326,14 @@ fun convertStr2Nibble2Str(data: String): String {
 }
 
 fun getCurrentDate(): String{
-    val sdf = SimpleDateFormat("YYYYMMdd")
+    val sdf = SimpleDateFormat("yyyyMMdd")
     val d = Date()
     val currDt = sdf.format(d)
 
     return currDt
 }
 fun getCurrentDateforMag(): String{
-    val sdf = SimpleDateFormat("YYMM")
+    val sdf = SimpleDateFormat("yyMM")
     val d = Date()
     val currDt = sdf.format(d)
 

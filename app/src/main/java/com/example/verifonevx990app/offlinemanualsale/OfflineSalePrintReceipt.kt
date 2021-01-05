@@ -167,9 +167,9 @@ class OfflineSalePrintReceipt {
 
         //Sign Body Code:-
         val signatureMsg = "SIGN ..............................................."
-        printer?.feedLine(2)
+       // printer?.feedLine(2) (Comment As per the new AIDL)
         alignLeftRightText(format, signatureMsg, "", "")
-        printer?.feedLine(2)
+       // printer?.feedLine(2) (Comment As per the new AIDL)
         //Agreement Body Code:-
         val ipt =
             IssuerParameterTable.selectFromIssuerParameterTable(AppPreference.WALLET_ISSUER_ID)

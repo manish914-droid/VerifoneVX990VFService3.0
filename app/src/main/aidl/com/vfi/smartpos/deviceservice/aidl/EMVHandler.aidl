@@ -61,10 +61,10 @@ interface EMVHandler {
                 .....
             }
             //show the application list, get the index
-            iemv.importAppSelect(index);
+            iemv.importAppSelection(index);
         }
      * \endcode
-     * @see IEMV#abortEMV, IEMV#importAppSelect
+     * @see IEMV#abortEMV, IEMV#importAppSelection
 	 */
 	void onSelectApplication(in List<Bundle> appList);
 

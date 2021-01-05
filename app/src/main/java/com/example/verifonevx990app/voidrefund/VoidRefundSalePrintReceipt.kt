@@ -394,10 +394,10 @@ class VoidRefundSalePrintReceipt {
                 centerText(format, pinVerifyMsg)
                 centerText(format, signatureMsg)
             } else {
-                printer?.feedLine(2)
+               // printer?.feedLine(2) (Comment As per the new AIDL)
                 alignLeftRightText(format, pinVerifyMsg, "", "")
                 alignLeftRightText(format, signatureMsg, "", "")
-                printer?.feedLine(2)
+               // printer?.feedLine(2) (Comment As per the new AIDL)
                 // printer?.addText(format, pinVerifyMsg)
                 //  printer?.addText(format, signatureMsg)
             }

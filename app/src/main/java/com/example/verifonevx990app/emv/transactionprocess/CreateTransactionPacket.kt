@@ -12,8 +12,7 @@ import com.example.verifonevx990app.vxUtils.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CreateTransactionPacket(private var cardProcessedData: CardProcessedDataModal) :
-    ITransactionPacketExchange {
+class CreateTransactionPacket(private var cardProcessedData: CardProcessedDataModal) : ITransactionPacketExchange {
 
     //Below method is used to create Transaction Packet in all cases:-
     init {
@@ -69,7 +68,7 @@ class CreateTransactionPacket(private var cardProcessedData: CardProcessedDataMo
             addFieldByHex(42, terminalData.merchantId)
 
             //Connection Time Stamps Field 48
-            addFieldByHex(48, ConnectionTimeStamps.getStamp())
+            addFieldByHex(48, ConnectionTimeStamps.getStamp() + ConnectionTimeStamps.getOtherInfo())
 
             //Field 52 in case of Pin
             if (!(TextUtils.isEmpty(cardProcessedData.getGeneratePinBlock())))
@@ -162,7 +161,7 @@ class CreateTransactionPacket(private var cardProcessedData: CardProcessedDataMo
                 val dateFormater = SimpleDateFormat("MMdd", Locale.getDefault())
                 cardProcessedData.setDate(dateFormater.format(date))
                 cardProcessedData.setTimeStamp(date.toString())
-                year = SimpleDateFormat("YY", Locale.getDefault()).format(date)
+                year = SimpleDateFormat("yy", Locale.getDefault()).format(date)
 
             } catch (ex: Exception) {
                 ex.printStackTrace()

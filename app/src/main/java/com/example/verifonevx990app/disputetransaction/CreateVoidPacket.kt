@@ -82,7 +82,7 @@ class CreateVoidPacket(val batch: BatchFileDataTable) : IVoidExchange {
         var year: String = "Year"
         try {
             val date: Long = Calendar.getInstance().timeInMillis
-            year = SimpleDateFormat("YY", Locale.getDefault()).format(date)
+            year = SimpleDateFormat("yy", Locale.getDefault()).format(date)
         } catch (ex: Exception) {
             ex.printStackTrace()
         }
