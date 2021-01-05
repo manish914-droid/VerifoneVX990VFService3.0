@@ -324,14 +324,17 @@ object HitServer {
         }
         catch (ex : SocketTimeoutException){
             println("Error in ConnectionTimeout child is --> "+ex.message)
+            ex.printStackTrace()
             callbackSale?.invoke(ex.message ?: "Connection Error", false,ConnectionError.ConnectionTimeout.errorCode.toString())
         }
         catch (ex: ConnectException) {
             println("Error in ConnectionTimeout child is --> "+ex.message)
+            ex.printStackTrace()
             callbackSale?.invoke(ex.message ?: "Connection Error", false,ConnectionError.ConnectionRefusedorOtherError.errorCode.toString())
         }
         catch (ex: Exception) {
             println("Error in ConnectionTimeout child is --> "+ex.message)
+            ex.printStackTrace()
             callbackSale?.invoke(ex.message ?: "Connection Error", false,ConnectionError.ConnectionRefusedorOtherError.errorCode.toString())
         }
         finally {

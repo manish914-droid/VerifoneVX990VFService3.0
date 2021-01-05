@@ -164,11 +164,13 @@ class OfflineSalePrintReceipt {
         )
 
         printer?.addText(format, "--------------------------------")
-
+        centerText(format, "                           ")
         //Sign Body Code:-
         val signatureMsg = "SIGN ..............................................."
        // printer?.feedLine(2) (Comment As per the new AIDL)
+
         alignLeftRightText(format, signatureMsg, "", "")
+        centerText(format, "                           ")
        // printer?.feedLine(2) (Comment As per the new AIDL)
         //Agreement Body Code:-
         val ipt =

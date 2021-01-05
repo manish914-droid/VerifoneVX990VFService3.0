@@ -201,7 +201,9 @@ class VoidOfflineSalePrintReceipt {
         val signatureMsg = "SIGN ..............................................."
         // printer?.addText(format, signatureMsg)
        // printer?.feedLine(2) (Comment As per the new AIDL)
+        centerText(format, "                           ")
         alignLeftRightText(format, signatureMsg, "", "")
+        centerText(format, "                           ")
        // printer?.feedLine(2) (Comment As per the new AIDL)
         //Agreement Body Code:-
         val ipt =

@@ -475,13 +475,28 @@ object ConnectionTimeStamps {
            }*/
     }
 
-    fun getStamp(): String = if (stamp.isNotEmpty()) stamp else "~~~~"
+    fun getStamp(): String {
+        val stamp=  if (stamp.isNotEmpty()) stamp else "~~~~"
+        val otherInfo= getOtherInfo()
+        return stamp+otherInfo
 
-    fun getOtherInfo(): String {
-        return "~${VerifoneApp.networkStrength}~${VerifoneApp.batteryStrength}~${VerifoneApp.imeiNo}~${VerifoneApp.simNo}~${VerifoneApp.operatorName}~~~~"
     }
 
+
+    fun getOtherInfo(): String {
+        return try {
+            val imei = VFService.vfDeviceService?.deviceInfo?.imei
+            val batteryStrength = VFService.vfDeviceService?.deviceInfo?.batteryLevel
+            val simNo = VFService.vfDeviceService?.deviceInfo?.iccid
+            Log.e("[1] iemi,battry,simNo", "$imei ,${batteryStrength} -----> ${simNo}  ")
+            "~${VerifoneApp.networkStrength}~${batteryStrength}~${imei}~${simNo}~${VerifoneApp.operatorName}"
+        } catch (ex: java.lang.Exception) {
+            Log.e("[2]iemi,battry,simNo", "${VerifoneApp.imeiNo} ,${VerifoneApp.batteryStrength} -----> ${VerifoneApp.simNo}  ")
+            "~${VerifoneApp.networkStrength}~${VerifoneApp.batteryStrength}~${VerifoneApp.imeiNo}~${VerifoneApp.simNo}~${VerifoneApp.operatorName}"
+        }
+    }
 }
+
 
 //region============= ROC, ConnectionTime========
 fun getF48TimeStamp(): String {

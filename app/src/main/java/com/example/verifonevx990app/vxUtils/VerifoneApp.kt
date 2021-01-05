@@ -160,7 +160,7 @@ class VerifoneApp : Application() {
 
             //EmvImplementation.isAidAdded = false
 
-          /*  if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
                 if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                     imeiNo = mTelephonyManager.imei
                 }
@@ -168,12 +168,12 @@ class VerifoneApp : Application() {
                 if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                     imeiNo = mTelephonyManager.deviceId
                 }
-            }*/
+            }
 
         }
 
         UserProvider.refresh()
-      //  setNetworkStrength()
+       setNetworkStrength()
 
     }
 

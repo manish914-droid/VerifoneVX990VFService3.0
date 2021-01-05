@@ -9,6 +9,7 @@ import com.example.verifonevx990app.realmtables.IssuerParameterTable
 import com.example.verifonevx990app.realmtables.TerminalParameterTable
 import com.example.verifonevx990app.utils.HexStringConverter
 import com.example.verifonevx990app.vxUtils.*
+
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -68,7 +69,7 @@ class CreateTransactionPacket(private var cardProcessedData: CardProcessedDataMo
             addFieldByHex(42, terminalData.merchantId)
 
             //Connection Time Stamps Field 48
-            addFieldByHex(48, ConnectionTimeStamps.getStamp() + ConnectionTimeStamps.getOtherInfo())
+            addFieldByHex(48, ConnectionTimeStamps.getStamp())
 
             //Field 52 in case of Pin
             if (!(TextUtils.isEmpty(cardProcessedData.getGeneratePinBlock())))

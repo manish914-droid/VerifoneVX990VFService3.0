@@ -389,6 +389,7 @@ class VoidRefundSalePrintReceipt {
                 PrinterConfig.addText.Alignment.BundleName,
                 PrinterConfig.addText.Alignment.CENTER
             )
+            centerText(format, "                           ")
             if (printerReceiptData.isPinverified) {
                 //  printer?.addText(format, pinVerifyMsg)
                 centerText(format, pinVerifyMsg)
@@ -401,7 +402,7 @@ class VoidRefundSalePrintReceipt {
                 // printer?.addText(format, pinVerifyMsg)
                 //  printer?.addText(format, signatureMsg)
             }
-
+            centerText(format, "                           ")
             centerText(format, printerReceiptData.cardHolderName)
             //  printer?.addText(format, printerReceiptData.cardHolderName)
 
