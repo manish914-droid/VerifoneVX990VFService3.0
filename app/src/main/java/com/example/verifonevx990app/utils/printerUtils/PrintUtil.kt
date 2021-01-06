@@ -1022,7 +1022,7 @@ class PrintUtil(context: Context?) {
 
             printer?.addTextInLine(
                 fmtAddTextInLine, leftText,
-                middleText, rightText, mode
+                middleText, rightText,  mode
             )
         } catch (ex: DeadObjectException) {
             throw ex
@@ -1948,21 +1948,26 @@ class PrintUtil(context: Context?) {
             //  val txnAmount=(((printerReceiptData.transactionAmt).toFloat())%100)
             val txnAmount = "%.2f".format(printerReceiptData.transactionalAmmount.toFloat() / 100)
             alignLeftRightText(textInLineFormatBundle, "TXN AMOUNT", txnAmount, ":  Rs ")
-            alignLeftRightText(
-                textInLineFormatBundle,
-                "CARD ISSUER",
-                "",
-                "  ${printerReceiptData.cardType}"
+       //     alignLeftRightText(textInLineFormatBundle, "CARD ISSUER", "  ${printerReceiptData.cardType}")
+val bun=Bundle()
+            bun.putInt(
+                PrinterConfig.addTextInLine.FontSize.BundleName,
+                PrinterConfig.addText.FontSize.NORMAL_24_24
             )
-
+            bun.putString(
+                PrinterConfig.addTextInLine.GlobalFont.BundleName,
+                PrinterFonts.path + PrinterFonts.FONT_AGENCYR
+            )
             val rateOfInterest = "%.2f".format(printerReceiptData.roi.toFloat() / 100) + " %"
-            alignLeftRightText(textInLineFormatBundle, "ROI (p.a)", "", "  $rateOfInterest")
-            alignLeftRightText(
-                textInLineFormatBundle,
-                "TENURE",
-                "",
-                "  ${printerReceiptData.tenure}  months"
-            )
+       //     alignLeftRightText(textInLineFormatBundle, "ROI (p.a)", " $rateOfInterest")
+            alignLeftRightText(bun, "CARD ISSUER               : ${printerReceiptData.cardType}", "")
+
+            alignLeftRightText(bun, "ROI (p.a)                      : ${rateOfInterest}", "")
+
+            //alignLeftRightText(textInLineFormatBundle, "TENURE", "    ${printerReceiptData.tenure}  months")
+
+            alignLeftRightText(bun, "TENURE                        : ${printerReceiptData.tenure}  months", "")
+
 //proc fee
             var procCodePrint = ""
             if (printerReceiptData.processingFee.toFloat() <= 0f) {
