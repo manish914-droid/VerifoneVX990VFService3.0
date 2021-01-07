@@ -498,15 +498,20 @@ SubMenuFragment : Fragment(), IOnSubMenuItemSelectListener {
                                             "Do you want to delete batch data?",
                                             true,
                                             "YES", {
-                                                val batchNumber =
+                                              /*  val batchNumber =
                                                     AppPreference.getIntData(PrefConstant.SETTLEMENT_BATCH_INCREMENT.keyName.toString()) + 1
                                                 AppPreference.setIntData(
                                                     PrefConstant.SETTLEMENT_BATCH_INCREMENT.keyName.toString(),
                                                     batchNumber
-                                                )
-                                                TerminalParameterTable.updateSaleBatchNumber(
+                                                )*/
+                                                val terminalParameterTable = TerminalParameterTable.selectFromSchemeTable()
+                                                val updatedBatchNumber =
+                                                    terminalParameterTable?.batchNumber?.toInt()?.plus(1)
+                                                TerminalParameterTable.updateSaleBatchNumber(updatedBatchNumber.toString())
+
+                                              /*  TerminalParameterTable.updateSaleBatchNumber(
                                                     batchNumber.toString()
-                                                )
+                                                )*/
                                                 // Added by MKK for automatic FBatch value zero in case of Clear Batch
                                                 AppPreference.saveBoolean(
                                                     PrefConstant.SERVER_HIT_STATUS.keyName.toString(),
@@ -514,7 +519,7 @@ SubMenuFragment : Fragment(), IOnSubMenuItemSelectListener {
                                                 )
                                                 //
 
-                                                ROCProviderV2.saveBatchInPreference(batchList)
+                                             //   ROCProviderV2.saveBatchInPreference(batchList)
                                                 //Delete All BatchFile Data from Table after Settlement:-
                                                 deleteBatchTableDataInDB()
                                                 VFService.showToast("Batch Deleted Successfully")
